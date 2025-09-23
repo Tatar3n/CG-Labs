@@ -55,7 +55,7 @@ namespace Lab2_CG
             var lblOriginal = new Label
             {
                 Text = "Оригинал",
-                Location = new Point(10, 355),
+                Location = new Point(10, 350),
                 AutoSize = true
             };
             this.Controls.Add(lblOriginal);
@@ -116,8 +116,8 @@ namespace Lab2_CG
 
             histogramPanel = new Panel
             {
-                Location = new Point(10, 380),
-                Size = new Size(1160, 600),
+                Location = new Point(10, 370),
+                Size = new Size(1160, 380),
                 BorderStyle = BorderStyle.FixedSingle,
                 AutoScroll = true
             };

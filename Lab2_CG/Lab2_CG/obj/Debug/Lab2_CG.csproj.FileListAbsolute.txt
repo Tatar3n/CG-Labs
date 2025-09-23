@@ -16,3 +16,12 @@ C:\Users\Honor\Desktop\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.pdb
 C:\Users\Honor\Desktop\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.exe.config
 C:\Users\Honor\Desktop\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.exe
 C:\Users\Honor\Desktop\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.pdb
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.exe.config
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.exe
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\bin\Debug\Lab2_CG.pdb
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.csproj.AssemblyReference.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.Properties.Resources.resources
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.csproj.GenerateResource.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.csproj.CoreCompileInputs.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.exe
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab2_CG\Lab2_CG\obj\Debug\Lab2_CG.pdb

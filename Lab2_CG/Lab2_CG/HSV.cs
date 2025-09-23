@@ -170,15 +170,15 @@ namespace Lab2_CG
             if (depth < 50)
                 return saturation * depth * 2 / 100;
             else
-                return saturation + (1.0 - saturation) * (depth - 100 / 2) * 2 / 100;
+                return saturation + (1.0 - saturation) * (depth - 50) * 2 / 100;
         }
 
         private double ValueTransform(double value, int depth)
         {
-            if (depth < 100 / 2)
+            if (depth < 50)
                 return value * depth * 2 / 100;
             else
-                return value + (1.0 - value) * (depth - 100 / 2) * 2 / 100;
+                return value + (1.0 - value) * (depth - 50) * 2 / 100;
         }
 
         private void RGBtoHSV(Color color, out double hue, out double saturation, out double value)

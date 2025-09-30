@@ -8,3 +8,15 @@ C:\Users\Honor\Desktop\LeetCode\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.csproj.CoreCom
 C:\Users\Honor\Desktop\LeetCode\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.exe
 C:\Users\Honor\Desktop\LeetCode\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.pdb
 C:\Users\Honor\Desktop\LeetCode\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.MainForm.resources
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\bin\Debug\Lab3_CG.exe.config
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\bin\Debug\Lab3_CG.exe
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\bin\Debug\Lab3_CG.pdb
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.csproj.AssemblyReference.cache
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.exe.config
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\GradientTriangleApp.GradientTriangleForm.resources
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.MainForm.resources
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.Properties.Resources.resources
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.csproj.GenerateResource.cache
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.csproj.CoreCompileInputs.cache
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.exe
+C:\Users\vladv\Documents\GitHub\CG-Labs\Lab3_CG\Lab3_CG\obj\Debug\Lab3_CG.pdb

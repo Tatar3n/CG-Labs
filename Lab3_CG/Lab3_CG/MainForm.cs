@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GradientTriangleApp;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -60,7 +61,7 @@ namespace Lab3_CG
             this.btnTask3.Name = "btnTask3";
             this.btnTask3.Size = new System.Drawing.Size(150, 35);
             this.btnTask3.TabIndex = 3;
-            this.btnTask3.Text = "Task 3";
+            this.btnTask3.Text = "GradientTriangle";
             this.btnTask3.UseVisualStyleBackColor = false;
             this.btnTask3.Click += new System.EventHandler(this.btnTask3_Click);
 
@@ -94,7 +95,8 @@ namespace Lab3_CG
 
         private void btnTask3_Click(object sender, EventArgs e)
         {
-            // здесь пиши свою форму ок
+            GradientTriangleForm form = new GradientTriangleForm();
+            form.ShowDialog();
         }
     }
 }

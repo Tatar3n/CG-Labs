@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\vladv\\documents\\github\\cg-labs\\lab3_cg\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\Lab3_CG\\MainForm.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\MainForm.cs",
+              "ToolTip": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\Lab3_CG\\MainForm.cs",
+              "RelativeToolTip": "Lab3_CG\\MainForm.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAiwFMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T11:43:07.154Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

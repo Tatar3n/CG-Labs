@@ -84,7 +84,8 @@ namespace Lab3_CG
 
         private void btnTask1_Click(object sender, EventArgs e)
         {
-            // здесь пиши свою форму ок
+            Form1 form = new Form1();
+            form.ShowDialog();
         }
 
         private void btnShowWuNB_Click(object sender, EventArgs e)

@@ -1,10 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\",
+  "WorkspaceRootPath": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\vladv\\documents\\github\\cg-labs\\lab3_cg\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\mainform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\wuandb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\wuandb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\wuandb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\wuandb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,20 +42,122 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 7,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainForm.resx",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.resx",
+              "RelativeDocumentMoniker": "Lab3_CG\\MainForm.resx",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.resx",
+              "RelativeToolTip": "Lab3_CG\\MainForm.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-09-30T14:58:02.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.Designer.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\MainForm.Designer.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.Designer.cs",
+              "RelativeToolTip": "Lab3_CG\\MainForm.Designer.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBcAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:57:59.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\Form1.Designer.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.Designer.cs",
+              "RelativeToolTip": "Lab3_CG\\Form1.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:55:57.121Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\Form1.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.cs",
+              "RelativeToolTip": "Lab3_CG\\Form1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:55:13.13Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WuAndB.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\WuAndB.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs",
+              "RelativeToolTip": "Lab3_CG\\WuAndB.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:55:04.717Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "WuAndB.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\WuAndB.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "RelativeToolTip": "Lab3_CG\\WuAndB.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:54:59.954Z",
+              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\MainForm.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "RelativeToolTip": "Lab3_CG\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-30T14:52:53.253Z",
+              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "MainForm.cs",
-              "DocumentMoniker": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\Lab3_CG\\MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\MainForm.cs",
-              "ToolTip": "C:\\Users\\vladv\\Documents\\GitHub\\CG-Labs\\Lab3_CG\\Lab3_CG\\MainForm.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs",
               "RelativeToolTip": "Lab3_CG\\MainForm.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAiwFQAAAA9AAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAiwFcAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-30T11:43:07.154Z",
               "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             }
           ]
         }

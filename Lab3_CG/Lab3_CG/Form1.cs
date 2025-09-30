@@ -15,7 +15,7 @@ namespace Lab3_CG
         private Bitmap bitmap;
         private Graphics graphics;
 
-        private Pen penForDrawing = new Pen(Color.Black, 5);
+        private Pen penForDrawing = new Pen(Color.Black, 1);
 
         private Color targetColor;
 
@@ -192,7 +192,7 @@ namespace Lab3_CG
                     break;
             }
 
-            graphics.DrawLines(new Pen(Color.Red, 3), this.borderPoints.ToArray());
+            graphics.DrawLines(new Pen(Color.Red, 1), this.borderPoints.ToArray());
 
             pictureBox1.Refresh();
         }

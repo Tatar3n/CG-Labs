@@ -3,11 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\lab3_cg\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\gradienttriangleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\gradienttriangleform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|c:\\users\\\u0430\u043C\u0430\u043B\u0438\u044F\\documents\\github\\lab_2_cg\\lab3_cg\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3424DBCF-132D-4718-9013-9454EB24AABE}|Lab3_CG\\Lab3_CG.csproj|solutionrelative:lab3_cg\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -42,11 +46,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "GradientTriangleForm.cs",
+              "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\GradientTriangleForm.cs",
+              "RelativeDocumentMoniker": "Lab3_CG\\GradientTriangleForm.cs",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\GradientTriangleForm.cs",
+              "RelativeToolTip": "Lab3_CG\\GradientTriangleForm.cs",
+              "ViewState": "AgIAAJ4AAAAAAAAAAAAswK8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-01T10:34:12.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "MainForm.resx",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.resx",
               "RelativeDocumentMoniker": "Lab3_CG\\MainForm.resx",
@@ -57,7 +74,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "MainForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.Designer.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\MainForm.Designer.cs",
@@ -69,7 +86,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\Form1.Designer.cs",
@@ -81,20 +98,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\Form1.cs",
-              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.cs*",
-              "RelativeToolTip": "Lab3_CG\\Form1.cs*",
-              "ViewState": "AgIAALAAAAAAAAAAAAAIwMIAAAAzAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\Form1.cs",
+              "RelativeToolTip": "Lab3_CG\\Form1.cs",
+              "ViewState": "AgIAAKMAAAAAAAAAAADwv7AAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-30T14:55:13.13Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "WuAndB.cs",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\WuAndB.cs",
@@ -106,7 +123,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "WuAndB.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\WuAndB.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\WuAndB.cs",
@@ -117,19 +134,18 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "MainForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\MainForm.cs",
               "ToolTip": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs [Design]",
               "RelativeToolTip": "Lab3_CG\\MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-30T14:52:53.253Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-09-30T14:52:53.253Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\\u0410\u043C\u0430\u043B\u0438\u044F\\Documents\\GitHub\\Lab_2_CG\\Lab3_CG\\Lab3_CG\\MainForm.cs",
               "RelativeDocumentMoniker": "Lab3_CG\\MainForm.cs",
@@ -137,8 +153,7 @@
               "RelativeToolTip": "Lab3_CG\\MainForm.cs",
               "ViewState": "AgIAADUAAAAAAAAAAAAiwFcAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-30T11:43:07.154Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-30T11:43:07.154Z"
             }
           ]
         },

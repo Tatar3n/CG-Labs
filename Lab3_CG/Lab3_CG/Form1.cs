@@ -218,7 +218,7 @@ namespace Lab3_CG
                 case 7:
                     return new Point(currentPoint.X + 1, currentPoint.Y + 1);
                 default:
-                    throw new ArgumentException("Invalid direction");
+                    throw new ArgumentException("Error");
             }
         }
 
@@ -276,9 +276,7 @@ namespace Lab3_CG
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 targetColor = colorDialog.Color;
-                //olorPreviewPanel.BackColor = targetColor;
                 double brightness = (0.299 * targetColor.R + 0.587 * targetColor.G + 0.114 * targetColor.B) / 255;
-
                 
                 Color textColor = brightness < 0.5 ? Color.White : Color.Black;
 

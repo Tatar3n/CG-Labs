@@ -60,7 +60,6 @@ namespace GradientTriangleApp
         {
             var bitmap = new Bitmap(canvas.Width, canvas.Height);
 
-            // Сортируем вершины по Y
             var vertices = new List<Vertex>
             {
                 new Vertex { X = x1, Y = y1, Color = color1 },
@@ -68,7 +67,6 @@ namespace GradientTriangleApp
                 new Vertex { X = x3, Y = y3, Color = color3 }
             };
 
-            // Сортируем вершины по возрастанию Y
             vertices.Sort((a, b) => a.Y.CompareTo(b.Y));
 
             int minY = vertices[0].Y;
@@ -78,12 +76,10 @@ namespace GradientTriangleApp
             {
                 var intersections = new List<IntersectionPoint>();
 
-                // Проверяем все три стороны
                 AddIntersectionIfNeeded(vertices[0], vertices[1], y, intersections);
                 AddIntersectionIfNeeded(vertices[1], vertices[2], y, intersections);
                 AddIntersectionIfNeeded(vertices[0], vertices[2], y, intersections);
 
-                // Должно быть ровно 2 пересечения
                 if (intersections.Count == 2)
                 {
                     var p1 = intersections[0];
@@ -114,7 +110,6 @@ namespace GradientTriangleApp
                 }
                 else if (intersections.Count > 2)
                 {
-                    // Если больше 2 пересечений, сортируем по X и берем крайние
                     intersections.Sort((a, b) => a.X.CompareTo(b.X));
                     var p1 = intersections[0];
                     var p2 = intersections[intersections.Count - 1];
@@ -142,7 +137,7 @@ namespace GradientTriangleApp
 
         private void AddIntersectionIfNeeded(Vertex v1, Vertex v2, int y, List<IntersectionPoint> intersections)
         {
-            if (v1.Y == v2.Y) return; // Горизонтальная линия
+            if (v1.Y == v2.Y) return; 
 
             if (y >= Math.Min(v1.Y, v2.Y) && y <= Math.Max(v1.Y, v2.Y))
             {

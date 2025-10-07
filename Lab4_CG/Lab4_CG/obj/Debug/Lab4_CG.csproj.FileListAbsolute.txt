@@ -1,0 +1,11 @@
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.csproj.AssemblyReference.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.Properties.Resources.resources
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.csproj.GenerateResource.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.csproj.CoreCompileInputs.cache
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\bin\Debug\Lab4_CG.exe.config
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\bin\Debug\Lab4_CG.exe
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\bin\Debug\Lab4_CG.pdb
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.exe
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.pdb
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.exe.config
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab4_CG\Lab4_CG\obj\Debug\Lab4_CG.Form1.resources

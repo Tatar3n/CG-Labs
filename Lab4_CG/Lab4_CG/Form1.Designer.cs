@@ -1,4 +1,4 @@
-﻿namespace CG_Lab
+﻿namespace Lab4_CG
 {
     partial class Form1
     {
@@ -39,6 +39,7 @@
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.searchingBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
@@ -54,10 +55,10 @@
             // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.Color.White;
-            this.pictureBox.Location = new System.Drawing.Point(3, 49);
+            this.pictureBox.Location = new System.Drawing.Point(5, 112);
             this.pictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(1259, 720);
+            this.pictureBox.Size = new System.Drawing.Size(1254, 594);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseClick);
@@ -78,9 +79,9 @@
             this.NewPolygon.Location = new System.Drawing.Point(102, 10);
             this.NewPolygon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NewPolygon.Name = "NewPolygon";
-            this.NewPolygon.Size = new System.Drawing.Size(169, 34);
+            this.NewPolygon.Size = new System.Drawing.Size(170, 34);
             this.NewPolygon.TabIndex = 3;
-            this.NewPolygon.Text = "новый полигон";
+            this.NewPolygon.Text = "Полигон";
             this.NewPolygon.UseVisualStyleBackColor = true;
             this.NewPolygon.Click += new System.EventHandler(this.NewPolygon_Click);
             // 
@@ -91,16 +92,16 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(182, 16);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Афинные преобраозвания";
+            this.label1.Text = "Афинные преобразования";
             // 
             // transformBox
             // 
             this.transformBox.FormattingEnabled = true;
             this.transformBox.Items.AddRange(new object[] {
             "Смещение на dx, dy",
-            "Поворот вокруг заданной пользователем точки",
+            "Поворот вокруг заданной точки",
             "Поворот вокруг своего центра",
-            "Масштабирование относительно заданной точки",
+            "Масштабирование относительно точки",
             "Масштабирование относительно своего центра"});
             this.transformBox.Location = new System.Drawing.Point(277, 17);
             this.transformBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -108,7 +109,6 @@
             this.transformBox.Size = new System.Drawing.Size(365, 24);
             this.transformBox.TabIndex = 6;
             this.transformBox.Text = "Смещение на dx, dy";
-            this.transformBox.SelectedIndexChanged += new System.EventHandler(this.transformBox_SelectedIndexChanged);
             // 
             // transformButton
             // 
@@ -124,7 +124,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Location = new System.Drawing.Point(1025, 111);
+            this.numericUpDown1.Location = new System.Drawing.Point(5, 84);
             this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             360,
@@ -139,17 +139,17 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(1046, 90);
+            this.label2.Location = new System.Drawing.Point(26, 63);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(119, 16);
             this.label2.TabIndex = 10;
-            this.label2.Text = "Угол (в градусах)";
+            this.label2.Text = "Угол поворота";
             // 
             // numericUpDown2
             // 
             this.numericUpDown2.DecimalPlaces = 2;
-            this.numericUpDown2.Location = new System.Drawing.Point(1004, 300);
+            this.numericUpDown2.Location = new System.Drawing.Point(485, 84);
             this.numericUpDown2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             10,
@@ -159,16 +159,11 @@
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(103, 22);
             this.numericUpDown2.TabIndex = 11;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // numericUpDown3
             // 
             this.numericUpDown3.DecimalPlaces = 2;
-            this.numericUpDown3.Location = new System.Drawing.Point(1129, 300);
+            this.numericUpDown3.Location = new System.Drawing.Point(610, 84);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             10,
@@ -178,28 +173,38 @@
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(100, 22);
             this.numericUpDown3.TabIndex = 12;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(1000, 281);
+            this.label3.Location = new System.Drawing.Point(481, 65);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(231, 16);
             this.label3.TabIndex = 13;
             this.label3.Text = "Коэффициенты масштабирования";
             // 
+            // searchingBox
+            // 
+            this.searchingBox.FormattingEnabled = true;
+            this.searchingBox.Items.AddRange(new object[] {
+            "Положение точки",
+            "Точка пересечения",
+            "Принадлежит ли точка полигону"});
+            this.searchingBox.Location = new System.Drawing.Point(818, 17);
+            this.searchingBox.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.searchingBox.Name = "searchingBox";
+            this.searchingBox.Size = new System.Drawing.Size(289, 24);
+            this.searchingBox.TabIndex = 10;
+            this.searchingBox.Text = "Векторные алгоритмы";
+            this.searchingBox.TextChanged += new System.EventHandler(this.searchingBox_TextChanged);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(1046, 178);
+            this.label4.Location = new System.Drawing.Point(248, 64);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(21, 16);
@@ -209,7 +214,7 @@
             // numericUpDown4
             // 
             this.numericUpDown4.DecimalPlaces = 2;
-            this.numericUpDown4.Location = new System.Drawing.Point(1004, 198);
+            this.numericUpDown4.Location = new System.Drawing.Point(206, 84);
             this.numericUpDown4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             50,
@@ -228,7 +233,7 @@
             // numericUpDown5
             // 
             this.numericUpDown5.DecimalPlaces = 2;
-            this.numericUpDown5.Location = new System.Drawing.Point(1129, 198);
+            this.numericUpDown5.Location = new System.Drawing.Point(331, 84);
             this.numericUpDown5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             50,
@@ -248,7 +253,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(1163, 178);
+            this.label5.Location = new System.Drawing.Point(365, 64);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(22, 16);
@@ -265,6 +270,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numericUpDown4);
             this.Controls.Add(this.numericUpDown5);
+            this.Controls.Add(this.searchingBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
@@ -298,6 +304,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox transformBox;
         private System.Windows.Forms.Button transformButton;
+        private System.Windows.Forms.ComboBox searchingBox;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
@@ -309,3 +316,4 @@
         private System.Windows.Forms.Label label5;
     }
 }
+

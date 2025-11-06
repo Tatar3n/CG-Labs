@@ -1182,6 +1182,72 @@ namespace Lab7_CG
             return new PolyHedron(faces, vertices);
         }
 
-        
+        public static PolyHedron LoadFromObj(string path)
+        {
+            var vertices = new List<Vertex>();
+            var faces = new List<Face>();
+
+            foreach (var line in File.ReadAllLines(path))
+            {
+                var trimmed = line.Trim();
+                if (trimmed.Length == 0 || trimmed.StartsWith("#")) continue;
+
+                if (trimmed.StartsWith("v "))
+                {
+                    var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 4)
+                    {
+                        float x = float.Parse(parts[1], CultureInfo.InvariantCulture);
+                        float y = float.Parse(parts[2], CultureInfo.InvariantCulture);
+                        float z = float.Parse(parts[3], CultureInfo.InvariantCulture);
+                        vertices.Add(new Vertex(x, y, z));
+                    }
+                }
+                else if (trimmed.StartsWith("f "))
+                {
+                    var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var idxs = new List<int>();
+                    for (int i = 1; i < parts.Length; i++)
+                    {
+                        var token = parts[i];
+                        var idxParts = token.Split('/');
+                        if (int.TryParse(idxParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int idx))
+                        {
+                            idxs.Add(idx - 1);
+                        }
+                    }
+                    if (idxs.Count >= 3)
+                    {
+                        faces.Add(new Face(idxs.ToArray()));
+                    }
+                }
+            }
+
+            return new PolyHedron(faces, vertices);
+        }
+
+        public void SaveAsObj(string path)
+        {
+            using (var sw = new StreamWriter(path))
+            {
+
+                foreach (var v in Vertices)
+                {
+                    sw.WriteLine(string.Format(
+                        CultureInfo.InvariantCulture,
+                        "v {0} {1} {2}",
+                        v.X, v.Y, v.Z));
+                }
+
+                foreach (var f in Faces)
+                {
+                    var line = "f " + string.Join(" ", f.Vertices.Select(i => (i + 1).ToString(CultureInfo.InvariantCulture)));
+                    sw.WriteLine(line);
+                }
+            }
+        }
+
+
+
     }
 }

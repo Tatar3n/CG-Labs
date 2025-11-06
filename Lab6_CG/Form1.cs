@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace CG_Lab
+namespace Lab6_CG
 {
     public partial class Form1 : Form
     {
@@ -20,6 +20,7 @@ namespace CG_Lab
         PolyHedron currentPolyhedron;
         private Vertex rotationLineStart = new Vertex(0, 0, 0);
         private Vertex rotationLineEnd = new Vertex(0, 0, 0);
+        private bool showRotationLine = false;
 
         public Form1()
         {
@@ -86,6 +87,7 @@ namespace CG_Lab
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             g.Clear(pictureBox1.BackColor);
+            showRotationLine = false;
 
             switch (comboBox1.SelectedIndex)
             {
@@ -130,6 +132,7 @@ namespace CG_Lab
         {
             numericScale.Value = 1;
             g.Clear(pictureBox1.BackColor);
+            showRotationLine = false;
 
             switch (reflectionComboBox.SelectedIndex)
             {
@@ -168,6 +171,7 @@ namespace CG_Lab
         private void affineOpButton_Click(object sender, EventArgs e)
         {
             g.Clear(pictureBox1.BackColor);
+            showRotationLine = false;
 
             Vertex anchor;
             double centerX, centerY, centerZ;
@@ -205,6 +209,7 @@ namespace CG_Lab
 
                     rotationLineStart = new Vertex((float)numericUpDown12.Value, (float)numericUpDown11.Value, (float)numericUpDown10.Value);
                     rotationLineEnd = anchor;
+                    showRotationLine = true;
 
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
                         .Moved(-anchor.X, -anchor.Y, -anchor.Z)
@@ -364,10 +369,10 @@ namespace CG_Lab
             return (float)Math.Sqrt(xDelta * xDelta + yDelta * yDelta + zDelta * zDelta);
         }
 
-        // tt3n
         public PointF GetProjection(int projIndex, float w, float h, float ax, float ay)
         {
             PointF res = new PointF(0, 0);
+
             switch (projIndex)
             {
                 case 0:
@@ -382,24 +387,29 @@ namespace CG_Lab
                     v = new Vertex(m1[0, 0] / m1[0, 3], m1[0, 1] / m1[0, 3], m1[0, 2] / m1[0, 3]);
                     res = new PointF(v.X + w, v.Y + h);
                     break;
+
                 case 1:
                     double angleX = ax * (Math.PI / 180);
                     double angleY = ay * (Math.PI / 180);
+
                     float cosX = (float)Math.Cos(angleX);
                     float cosY = (float)Math.Cos(angleY);
                     float sinX = (float)Math.Sin(angleX);
                     float sinY = (float)Math.Sin(angleY);
+
                     Matrix<float> m2 = new float[4, 4] {
                         { cosY, sinX * sinY, 0, 0 },
                         { 0, cosX, 0, 0 },
                         { sinY, -sinX * cosY, 0, 0 },
                         { 0, 0, 0, 1 }
                     };
+
                     Vertex v1 = new Vertex(X - w, Y - h, Z);
                     v1 = v1 * m2;
                     res = new PointF(v1.X + w, v1.Y + h);
                     break;
             }
+
             return res;
         }
     }
@@ -443,18 +453,21 @@ namespace CG_Lab
                 b += vertex.Y;
                 c += vertex.Z;
             }
+
             a /= vertices.Count;
             b /= vertices.Count;
             c /= vertices.Count;
         }
 
-        // tt3n
         public PolyHedron LineRotated(float l, float m, float n, float angle)
         {
             var newPoly = this.Clone();
+
             double angleRadians = (double)angle * (Math.PI / 180);
+
             float cos = (float)Math.Cos(angleRadians);
             float sin = (float)Math.Sin(angleRadians);
+
             Matrix<float> RxMatrix = new float[4, 4]
             {
                 { l*l+cos*(1-l*l), l*(1-cos)*m+n*sin,  l*(1-cos)*n-m*sin,  0 },
@@ -462,8 +475,12 @@ namespace CG_Lab
                 { l*(1-cos)*n+m*sin, m*(1-cos)*n-l*sin,  n*n+cos*(1-n*n),  0 },
                 { 0,  0,  0,  1 }
             };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
                 newPoly.Vertices[i] *= RxMatrix;
+            }
+
             return newPoly;
         }
 
@@ -538,10 +555,10 @@ namespace CG_Lab
             return newPoly;
         }
 
-        // tt3n
         public PolyHedron Scaled(float c1, float c2, float c3)
         {
             var newPoly = this.Clone();
+
             Matrix<float> translationMatrix = new float[4, 4]
             {
                 { c1, 0,  0,  0 },
@@ -549,11 +566,15 @@ namespace CG_Lab
                 { 0,  0,  c3, 0 },
                 { 0,  0,  0,  1 }
             };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
                 newPoly.Vertices[i] *= translationMatrix;
+            }
+
             return newPoly;
         }
-        // vladick
+
         public PolyHedron Moved(float a, float b, float c)
         {
             var newPoly = this.Clone();
@@ -573,7 +594,7 @@ namespace CG_Lab
 
             return newPoly;
         }
-        // vladick
+
         public PolyHedron RotatedXAxis(float alpha)
         {
             var newPoly = this.Clone();
@@ -599,7 +620,6 @@ namespace CG_Lab
             return newPoly;
         }
 
-        // vladick
         public PolyHedron RotatedYAxis(float alpha)
         {
             var newPoly = this.Clone();
@@ -625,7 +645,6 @@ namespace CG_Lab
             return newPoly;
         }
 
-        // vladick
         public PolyHedron RotatedZAxis(float alpha)
         {
             var newPoly = this.Clone();
@@ -857,8 +876,6 @@ namespace CG_Lab
             var newPoly = new PolyHedron(this.Faces, new List<Vertex>(this.Vertices));
             return newPoly;
         }
-
-        // vladick
         public PolyHedron Reflected(string plane)
         {
             var newPoly = this.Clone();
@@ -909,12 +926,13 @@ namespace CG_Lab
             return newPoly;
         }
 
-        // tt3n
         public PolyHedron ScaledAroundCenter(float scaleX, float scaleY, float scaleZ)
         {
             var newPoly = this.Clone();
+
             double centerX = 0, centerY = 0, centerZ = 0;
             FindCenter(newPoly.Vertices, ref centerX, ref centerY, ref centerZ);
+
             Matrix<float> moveToOriginMatrix = new float[4, 4]
             {
                 { 1, 0, 0, 0 },
@@ -922,8 +940,12 @@ namespace CG_Lab
                 { 0, 0, 1, 0 },
                 { (float)-centerX, (float)-centerY, (float)-centerZ, 1 }
             };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
                 newPoly.Vertices[i] *= moveToOriginMatrix;
+            }
+
             Matrix<float> scalingMatrix = new float[4, 4]
             {
                 { scaleX, 0, 0, 0 },
@@ -931,8 +953,12 @@ namespace CG_Lab
                 { 0, 0, scaleZ, 0 },
                 { 0, 0, 0, 1 }
             };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
                 newPoly.Vertices[i] *= scalingMatrix;
+            }
+
             Matrix<float> moveBackMatrix = new float[4, 4]
             {
                 { 1, 0, 0, 0 },
@@ -940,8 +966,12 @@ namespace CG_Lab
                 { 0, 0, 1, 0 },
                 { (float)centerX, (float)centerY, (float)centerZ, 1 }
             };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
                 newPoly.Vertices[i] *= moveBackMatrix;
+            }
+
             return newPoly;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -1182,72 +1182,119 @@ namespace Lab7_CG
             return new PolyHedron(faces, vertices);
         }
 
-           public static PolyHedron LoadFromObj(string path)
-   {
-       var vertices = new List<Vertex>();
-       var faces = new List<Face>();
+        public static PolyHedron LoadFromObj(string path)
+        {
+            var vertices = new List<Vertex>();
+            var faces = new List<Face>();
 
-       foreach (var line in File.ReadAllLines(path))
-       {
-           var trimmed = line.Trim();
-           if (trimmed.Length == 0 || trimmed.StartsWith("#")) continue;
+            foreach (var line in File.ReadAllLines(path))
+            {
+                var trimmed = line.Trim();
+                if (trimmed.Length == 0 || trimmed.StartsWith("#")) continue;
 
-           if (trimmed.StartsWith("v "))
-           {
-               var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-               if (parts.Length >= 4)
-               {
-                   float x = float.Parse(parts[1], CultureInfo.InvariantCulture);
-                   float y = float.Parse(parts[2], CultureInfo.InvariantCulture);
-                   float z = float.Parse(parts[3], CultureInfo.InvariantCulture);
-                   vertices.Add(new Vertex(x, y, z));
-               }
-           }
-           else if (trimmed.StartsWith("f "))
-           {
-               var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-               var idxs = new List<int>();
-               for (int i = 1; i < parts.Length; i++)
-               {
-                   var token = parts[i];
-                   var idxParts = token.Split('/');
-                   if (int.TryParse(idxParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int idx))
-                   {
-                       idxs.Add(idx - 1);
-                   }
-               }
-               if (idxs.Count >= 3)
-               {
-                   faces.Add(new Face(idxs.ToArray()));
-               }
-           }
-       }
+                if (trimmed.StartsWith("v "))
+                {
+                    var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 4)
+                    {
+                        float x = float.Parse(parts[1], CultureInfo.InvariantCulture);
+                        float y = float.Parse(parts[2], CultureInfo.InvariantCulture);
+                        float z = float.Parse(parts[3], CultureInfo.InvariantCulture);
+                        vertices.Add(new Vertex(x, y, z));
+                    }
+                }
+                else if (trimmed.StartsWith("f "))
+                {
+                    var parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var idxs = new List<int>();
+                    for (int i = 1; i < parts.Length; i++)
+                    {
+                        var token = parts[i];
+                        var idxParts = token.Split('/');
+                        if (int.TryParse(idxParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int idx))
+                        {
+                            idxs.Add(idx - 1);
+                        }
+                    }
+                    if (idxs.Count >= 3)
+                    {
+                        faces.Add(new Face(idxs.ToArray()));
+                    }
+                }
+            }
 
-       return new PolyHedron(faces, vertices);
-   }
+            return new PolyHedron(faces, vertices);
+        }
 
-   public void SaveAsObj(string path)
-   {
-       using (var sw = new StreamWriter(path))
-       {
+        public void SaveAsObj(string path)
+        {
+            using (var sw = new StreamWriter(path))
+            {
 
-           foreach (var v in Vertices)
-           {
-               sw.WriteLine(string.Format(
-                   CultureInfo.InvariantCulture,
-                   "v {0} {1} {2}",
-                   v.X, v.Y, v.Z));
-           }
+                foreach (var v in Vertices)
+                {
+                    sw.WriteLine(string.Format(
+                        CultureInfo.InvariantCulture,
+                        "v {0} {1} {2}",
+                        v.X, v.Y, v.Z));
+                }
 
-           foreach (var f in Faces)
-           {
-               var line = "f " + string.Join(" ", f.Vertices.Select(i => (i + 1).ToString(CultureInfo.InvariantCulture)));
-               sw.WriteLine(line);
-           }
-       }
-   }
+                foreach (var f in Faces)
+                {
+                    var line = "f " + string.Join(" ", f.Vertices.Select(i => (i + 1).ToString(CultureInfo.InvariantCulture)));
+                    sw.WriteLine(line);
+                }
+            }
+        }
 
+public static PolyHedron BuildFunctionSurface(int funcIndex, double xMin, double xMax, double yMin, double yMax, int nx, int ny)
+{
+    var vertices = new List<Vertex>();
+    var faces = new List<Face>();
 
+    double dx = (xMax - xMin) / nx;
+    double dy = (yMax - yMin) / ny;
+
+    for (int i = 0; i <= nx; i++)
+    {
+        double x = xMin + i * dx;
+        for (int j = 0; j <= ny; j++)
+        {
+            double y = yMin + j * dy;
+            double z = EvaluateFunction(funcIndex, x, y);
+            vertices.Add(new Vertex((float)x, (float)z, (float)y));
+        }
+    }
+
+    for (int i = 0; i < nx; i++)
+    {
+        for (int j = 0; j < ny; j++)
+        {
+            int v00 = i * (ny + 1) + j;
+            int v10 = (i + 1) * (ny + 1) + j;
+            int v11 = (i + 1) * (ny + 1) + j + 1;
+            int v01 = i * (ny + 1) + j + 1;
+            faces.Add(new Face(v00, v10, v11, v01));
+        }
+    }
+
+    return new PolyHedron(faces, vertices);
+}
+
+private static double EvaluateFunction(int funcIndex, double x, double y)
+{
+    switch (funcIndex)
+    {
+        case 0:
+            return Math.Sin(Math.Sqrt(x * x + y * y));
+        case 1:
+            return Math.Sin(x + y) + 1;
+        case 2:
+            return -Math.Sin(x) * Math.Cos(y);
+        default:
+            return 0;
+    }
+}
 
     }
 }

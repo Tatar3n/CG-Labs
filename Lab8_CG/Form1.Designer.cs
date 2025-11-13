@@ -46,9 +46,6 @@
             this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown11 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
-            this.labelScale = new System.Windows.Forms.Label();
-            this.numericScale = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -97,7 +94,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisZNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisYNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisXNumeric)).BeginInit();
@@ -398,64 +394,27 @@
             this.numericUpDown12.Size = new System.Drawing.Size(76, 22);
             this.numericUpDown12.TabIndex = 13;
             // 
-            // labelScale
-            // 
-            this.labelScale.AutoSize = true;
-            this.labelScale.Location = new System.Drawing.Point(992, 108);
-            this.labelScale.Name = "labelScale";
-            this.labelScale.Size = new System.Drawing.Size(273, 16);
-            this.labelScale.TabIndex = 3;
-            this.labelScale.Text = "Масштабирования относительно центра";
-            // 
-            // numericScale
-            // 
-            this.numericScale.DecimalPlaces = 1;
-            this.numericScale.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericScale.Location = new System.Drawing.Point(1104, 138);
-            this.numericScale.Name = "numericScale";
-            this.numericScale.Size = new System.Drawing.Size(94, 22);
-            this.numericScale.TabIndex = 4;
-            this.numericScale.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericScale.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(1093, 174);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(103, 16);
-            this.label8.TabIndex = 30;
-            this.label8.Text = "Центр фигуры:";
-            // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1012, 208);
+            this.textBox1.Location = new System.Drawing.Point(1003, 132);
             this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(77, 22);
+            this.textBox1.Size = new System.Drawing.Size(265, 22);
             this.textBox1.TabIndex = 31;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(1102, 208);
+            this.textBox2.Location = new System.Drawing.Point(1003, 171);
             this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(77, 22);
+            this.textBox2.Size = new System.Drawing.Size(265, 22);
             this.textBox2.TabIndex = 32;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(1184, 208);
+            this.textBox3.Location = new System.Drawing.Point(1003, 214);
             this.textBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
@@ -923,7 +882,6 @@
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.numericUpDown10);
             this.Controls.Add(this.numericUpDown11);
@@ -947,8 +905,6 @@
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.numericScale);
-            this.Controls.Add(this.labelScale);
             this.Controls.Add(this.reflectionComboBox);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
@@ -963,7 +919,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisZNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisYNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axisXNumeric)).EndInit();
@@ -1004,9 +959,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown10;
         private System.Windows.Forms.NumericUpDown numericUpDown11;
         private System.Windows.Forms.NumericUpDown numericUpDown12;
-        private System.Windows.Forms.Label labelScale;
-        private System.Windows.Forms.NumericUpDown numericScale;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;

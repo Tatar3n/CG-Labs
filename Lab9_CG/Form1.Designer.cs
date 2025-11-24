@@ -1,16 +1,9 @@
-﻿namespace Lab7_CG
+namespace Lab7_CG
 {
     partial class Form1
     {
-        /// <summary>
-        /// Обязательная переменная конструктора.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Освободить все используемые ресурсы.
-        /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,12 +13,8 @@
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
+        #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
-        /// </summary>
         private void InitializeComponent()
         {
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -84,19 +73,9 @@
             this.lblFunction = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.groupBoxLighting = new System.Windows.Forms.GroupBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
-            this.lblShading = new System.Windows.Forms.Label();
-            this.lightZNum = new System.Windows.Forms.NumericUpDown();
-            this.lightYNum = new System.Windows.Forms.NumericUpDown();
-            this.lightXNum = new System.Windows.Forms.NumericUpDown();
-            this.lblLightZ = new System.Windows.Forms.Label();
-            this.lblLightY = new System.Windows.Forms.Label();
-            this.lblLightX = new System.Windows.Forms.Label();
-            this.lblLightPosition = new System.Windows.Forms.Label();
-            this.groupBoxTexturing = new System.Windows.Forms.GroupBox();
-            this.textureComboBox = new System.Windows.Forms.ComboBox();
-            this.lblTexture = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.chkZBuffer = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -120,185 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudYMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudXMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudXMin)).BeginInit();
-            this.Controls.Add(this.groupBoxLighting);
-            this.Controls.Add(this.groupBoxTexturing);
-            this.groupBoxLighting.Controls.Add(this.shadingComboBox);
-            this.groupBoxLighting.Controls.Add(this.lblShading);
-            this.groupBoxLighting.Controls.Add(this.lightZNum);
-            this.groupBoxLighting.Controls.Add(this.lightYNum);
-            this.groupBoxLighting.Controls.Add(this.lightXNum);
-            this.groupBoxLighting.Controls.Add(this.lblLightZ);
-            this.groupBoxLighting.Controls.Add(this.lblLightY);
-            this.groupBoxLighting.Controls.Add(this.lblLightX);
-            this.groupBoxLighting.Controls.Add(this.lblLightPosition);
-            this.groupBoxLighting.Location = new System.Drawing.Point(993, 450);
-            this.groupBoxLighting.Name = "groupBoxLighting";
-            this.groupBoxLighting.Size = new System.Drawing.Size(280, 120);
-            this.groupBoxLighting.TabIndex = 39;
-            this.groupBoxLighting.TabStop = false;
-            this.groupBoxLighting.Text = "Освещение";
-            this.shadingComboBox.FormattingEnabled = true;
-            this.shadingComboBox.Items.AddRange(new object[] {
-            "Нет",
-            "Flat Shading",
-            "Gouraud Shading",
-            "Phong Shading"});
-            this.shadingComboBox.Location = new System.Drawing.Point(71, 24);
-            this.shadingComboBox.Name = "shadingComboBox";
-            this.shadingComboBox.Size = new System.Drawing.Size(195, 24);
-            this.shadingComboBox.TabIndex = 8;
-            this.shadingComboBox.SelectedIndexChanged += new System.EventHandler(this.shadingComboBox_SelectedIndexChanged);
             this.SuspendLayout();
-            this.lblShading.AutoSize = true;
-            this.lblShading.Location = new System.Drawing.Point(8, 27);
-            this.lblShading.Name = "lblShading";
-            this.lblShading.Size = new System.Drawing.Size(57, 16);
-            this.lblShading.TabIndex = 7;
-            this.lblShading.Text = "Шейдинг";
-            this.lightZNum.DecimalPlaces = 2;
-            this.lightZNum.Location = new System.Drawing.Point(211, 85);
-            this.lightZNum.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.lightZNum.Minimum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            -2147483648});
-            this.lightZNum.Name = "lightZNum";
-            this.lightZNum.Size = new System.Drawing.Size(55, 22);
-            this.lightZNum.TabIndex = 6;
-            this.lightZNum.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.lightZNum.ValueChanged += new System.EventHandler(this.lightZNum_ValueChanged);
-            // 
-            // lightYNum
-            // 
-            this.lightYNum.DecimalPlaces = 2;
-            this.lightYNum.Location = new System.Drawing.Point(130, 85);
-            this.lightYNum.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.lightYNum.Minimum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            -2147483648});
-            this.lightYNum.Name = "lightYNum";
-            this.lightYNum.Size = new System.Drawing.Size(55, 22);
-            this.lightYNum.TabIndex = 5;
-            this.lightYNum.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.lightYNum.ValueChanged += new System.EventHandler(this.lightYNum_ValueChanged);
-            // 
-            // lightXNum
-            // 
-            this.lightXNum.DecimalPlaces = 2;
-            this.lightXNum.Location = new System.Drawing.Point(49, 85);
-            this.lightXNum.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.lightXNum.Minimum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            -2147483648});
-            this.lightXNum.Name = "lightXNum";
-            this.lightXNum.Size = new System.Drawing.Size(55, 22);
-            this.lightXNum.TabIndex = 4;
-            this.lightXNum.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.lightXNum.ValueChanged += new System.EventHandler(this.lightXNum_ValueChanged);
-            // 
-            // lblLightZ
-            // 
-            this.lblLightZ.AutoSize = true;
-            this.lblLightZ.Location = new System.Drawing.Point(191, 87);
-            this.lblLightZ.Name = "lblLightZ";
-            this.lblLightZ.Size = new System.Drawing.Size(16, 16);
-            this.lblLightZ.TabIndex = 3;
-            this.lblLightZ.Text = "Z";
-            // 
-            // lblLightY
-            // 
-            this.lblLightY.AutoSize = true;
-            this.lblLightY.Location = new System.Drawing.Point(110, 87);
-            this.lblLightY.Name = "lblLightY";
-            this.lblLightY.Size = new System.Drawing.Size(16, 16);
-            this.lblLightY.TabIndex = 2;
-            this.lblLightY.Text = "Y";
-            // 
-            // lblLightX
-            // 
-            this.lblLightX.AutoSize = true;
-            this.lblLightX.Location = new System.Drawing.Point(29, 87);
-            this.lblLightX.Name = "lblLightX";
-            this.lblLightX.Size = new System.Drawing.Size(16, 16);
-            this.lblLightX.TabIndex = 1;
-            this.lblLightX.Text = "X";
-            // 
-            // lblLightPosition
-            // 
-            this.lblLightPosition.AutoSize = true;
-            this.lblLightPosition.Location = new System.Drawing.Point(8, 59);
-            this.lblLightPosition.Name = "lblLightPosition";
-            this.lblLightPosition.Size = new System.Drawing.Size(152, 16);
-            this.lblLightPosition.TabIndex = 0;
-            this.lblLightPosition.Text = "Позиция источника (X,Y,Z)";
-            // 
-            // groupBoxTexturing
-            // 
-            this.groupBoxTexturing.Controls.Add(this.textureComboBox);
-            this.groupBoxTexturing.Controls.Add(this.lblTexture);
-            this.groupBoxTexturing.Location = new System.Drawing.Point(993, 580);
-            this.groupBoxTexturing.Name = "groupBoxTexturing";
-            this.groupBoxTexturing.Size = new System.Drawing.Size(280, 60);
-            this.groupBoxTexturing.TabIndex = 40;
-            this.groupBoxTexturing.TabStop = false;
-            this.groupBoxTexturing.Text = "Текстурирование";
-            // 
-            // textureComboBox
-            // 
-            this.textureComboBox.FormattingEnabled = true;
-            this.textureComboBox.Items.AddRange(new object[] {
-            "Нет",
-            "Сплошной цвет",
-            "Шахматная доска",
-            "Изображение"});
-            this.textureComboBox.Location = new System.Drawing.Point(71, 24);
-            this.textureComboBox.Name = "textureComboBox";
-            this.textureComboBox.Size = new System.Drawing.Size(195, 24);
-            this.textureComboBox.TabIndex = 1;
-            this.textureComboBox.SelectedIndexChanged += new System.EventHandler(this.textureComboBox_SelectedIndexChanged);
-            // 
-            // lblTexture
-            // 
-            this.lblTexture.AutoSize = true;
-            this.lblTexture.Location = new System.Drawing.Point(8, 27);
-            this.lblTexture.Name = "lblTexture";
-            this.lblTexture.Size = new System.Drawing.Size(57, 16);
-            this.lblTexture.TabIndex = 0;
-            this.lblTexture.Text = "Текстура";
-
-            // Обновляем расположение существующих groupBox'ов
-            this.groupBoxObj.Location = new System.Drawing.Point(993, 650);
-            this.groupBoxRevolution.Location = new System.Drawing.Point(993, 730);
-            this.groupBoxFunction.Location = new System.Drawing.Point(993, 860);
             // 
             // comboBox1
             // 
@@ -334,7 +135,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(13, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(8, 2);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(973, 940);
@@ -345,7 +146,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.DecimalPlaces = 2;
-            this.numericUpDown1.Location = new System.Drawing.Point(1012, 318);
+            this.numericUpDown1.Location = new System.Drawing.Point(1004, 224);
             this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             1000,
@@ -364,7 +165,7 @@
             // numericUpDown2
             // 
             this.numericUpDown2.DecimalPlaces = 2;
-            this.numericUpDown2.Location = new System.Drawing.Point(1101, 318);
+            this.numericUpDown2.Location = new System.Drawing.Point(1093, 224);
             this.numericUpDown2.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             1000,
@@ -383,7 +184,7 @@
             // numericUpDown3
             // 
             this.numericUpDown3.DecimalPlaces = 2;
-            this.numericUpDown3.Location = new System.Drawing.Point(1188, 318);
+            this.numericUpDown3.Location = new System.Drawing.Point(1180, 224);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             1000,
@@ -410,7 +211,7 @@
             "Вращение параллельно OX",
             "Вращение параллельно OY",
             "Вращение параллельно OZ"});
-            this.comboBox2.Location = new System.Drawing.Point(989, 242);
+            this.comboBox2.Location = new System.Drawing.Point(990, 147);
             this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(283, 24);
@@ -420,7 +221,7 @@
             // numericUpDown4
             // 
             this.numericUpDown4.DecimalPlaces = 2;
-            this.numericUpDown4.Location = new System.Drawing.Point(1013, 384);
+            this.numericUpDown4.Location = new System.Drawing.Point(1005, 290);
             this.numericUpDown4.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             1000,
@@ -439,7 +240,7 @@
             // numericUpDown5
             // 
             this.numericUpDown5.DecimalPlaces = 2;
-            this.numericUpDown5.Location = new System.Drawing.Point(1102, 384);
+            this.numericUpDown5.Location = new System.Drawing.Point(1094, 290);
             this.numericUpDown5.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             1000,
@@ -458,7 +259,7 @@
             // numericUpDown6
             // 
             this.numericUpDown6.DecimalPlaces = 2;
-            this.numericUpDown6.Location = new System.Drawing.Point(1188, 384);
+            this.numericUpDown6.Location = new System.Drawing.Point(1180, 290);
             this.numericUpDown6.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown6.Maximum = new decimal(new int[] {
             1000,
@@ -480,7 +281,7 @@
             this.projectionListBox.Items.AddRange(new object[] {
             "Перспективная",
             "Аксонометрическая"});
-            this.projectionListBox.Location = new System.Drawing.Point(1012, 489);
+            this.projectionListBox.Location = new System.Drawing.Point(1007, 479);
             this.projectionListBox.Margin = new System.Windows.Forms.Padding(4);
             this.projectionListBox.Name = "projectionListBox";
             this.projectionListBox.Size = new System.Drawing.Size(249, 24);
@@ -491,7 +292,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1098, 469);
+            this.label5.Location = new System.Drawing.Point(1093, 459);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 16);
             this.label5.TabIndex = 24;
@@ -499,7 +300,7 @@
             // 
             // affineOpButton
             // 
-            this.affineOpButton.Location = new System.Drawing.Point(1072, 271);
+            this.affineOpButton.Location = new System.Drawing.Point(1064, 177);
             this.affineOpButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.affineOpButton.Name = "affineOpButton";
             this.affineOpButton.Size = new System.Drawing.Size(131, 27);
@@ -511,7 +312,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(986, 386);
+            this.label6.Location = new System.Drawing.Point(985, 292);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(14, 16);
@@ -521,7 +322,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(986, 425);
+            this.label7.Location = new System.Drawing.Point(985, 331);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(14, 16);
@@ -531,7 +332,7 @@
             // numericUpDown10
             // 
             this.numericUpDown10.DecimalPlaces = 2;
-            this.numericUpDown10.Location = new System.Drawing.Point(1188, 423);
+            this.numericUpDown10.Location = new System.Drawing.Point(1180, 329);
             this.numericUpDown10.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown10.Maximum = new decimal(new int[] {
             1000,
@@ -550,7 +351,7 @@
             // numericUpDown11
             // 
             this.numericUpDown11.DecimalPlaces = 2;
-            this.numericUpDown11.Location = new System.Drawing.Point(1102, 423);
+            this.numericUpDown11.Location = new System.Drawing.Point(1094, 329);
             this.numericUpDown11.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown11.Maximum = new decimal(new int[] {
             1000,
@@ -569,7 +370,7 @@
             // numericUpDown12
             // 
             this.numericUpDown12.DecimalPlaces = 2;
-            this.numericUpDown12.Location = new System.Drawing.Point(1013, 423);
+            this.numericUpDown12.Location = new System.Drawing.Point(1005, 329);
             this.numericUpDown12.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown12.Maximum = new decimal(new int[] {
             1000,
@@ -587,7 +388,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1003, 132);
+            this.textBox1.Location = new System.Drawing.Point(1301, 14);
             this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -596,7 +397,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(1003, 171);
+            this.textBox2.Location = new System.Drawing.Point(1301, 53);
             this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
@@ -605,7 +406,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(1003, 214);
+            this.textBox3.Location = new System.Drawing.Point(1301, 94);
             this.textBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
@@ -624,7 +425,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1194, 523);
+            this.label4.Location = new System.Drawing.Point(1189, 513);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 16);
             this.label4.TabIndex = 23;
@@ -633,7 +434,7 @@
             // axisZNumeric
             // 
             this.axisZNumeric.DecimalPlaces = 2;
-            this.axisZNumeric.Location = new System.Drawing.Point(1188, 543);
+            this.axisZNumeric.Location = new System.Drawing.Point(1183, 533);
             this.axisZNumeric.Margin = new System.Windows.Forms.Padding(4);
             this.axisZNumeric.Maximum = new decimal(new int[] {
             360,
@@ -658,7 +459,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1109, 523);
+            this.label3.Location = new System.Drawing.Point(1104, 513);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 16);
             this.label3.TabIndex = 22;
@@ -667,7 +468,7 @@
             // axisYNumeric
             // 
             this.axisYNumeric.DecimalPlaces = 2;
-            this.axisYNumeric.Location = new System.Drawing.Point(1101, 543);
+            this.axisYNumeric.Location = new System.Drawing.Point(1096, 533);
             this.axisYNumeric.Margin = new System.Windows.Forms.Padding(4);
             this.axisYNumeric.Maximum = new decimal(new int[] {
             360,
@@ -692,7 +493,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1022, 523);
+            this.label2.Location = new System.Drawing.Point(1017, 513);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 16);
             this.label2.TabIndex = 21;
@@ -701,7 +502,7 @@
             // axisXNumeric
             // 
             this.axisXNumeric.DecimalPlaces = 2;
-            this.axisXNumeric.Location = new System.Drawing.Point(1012, 543);
+            this.axisXNumeric.Location = new System.Drawing.Point(1007, 533);
             this.axisXNumeric.Margin = new System.Windows.Forms.Padding(4);
             this.axisXNumeric.Maximum = new decimal(new int[] {
             360,
@@ -726,7 +527,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1101, 355);
+            this.label1.Location = new System.Drawing.Point(1093, 261);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 16);
             this.label1.TabIndex = 35;
@@ -736,7 +537,7 @@
             // 
             this.groupBoxObj.Controls.Add(this.btnSaveObj);
             this.groupBoxObj.Controls.Add(this.btnLoadObj);
-            this.groupBoxObj.Location = new System.Drawing.Point(993, 570);
+            this.groupBoxObj.Location = new System.Drawing.Point(988, 560);
             this.groupBoxObj.Name = "groupBoxObj";
             this.groupBoxObj.Size = new System.Drawing.Size(280, 70);
             this.groupBoxObj.TabIndex = 36;
@@ -772,7 +573,7 @@
             this.groupBoxRevolution.Controls.Add(this.lblRevolveSegments);
             this.groupBoxRevolution.Controls.Add(this.comboRevolveAxis);
             this.groupBoxRevolution.Controls.Add(this.lblRevolveAxis);
-            this.groupBoxRevolution.Location = new System.Drawing.Point(993, 646);
+            this.groupBoxRevolution.Location = new System.Drawing.Point(988, 636);
             this.groupBoxRevolution.Name = "groupBoxRevolution";
             this.groupBoxRevolution.Size = new System.Drawing.Size(280, 120);
             this.groupBoxRevolution.TabIndex = 37;
@@ -1060,11 +861,50 @@
             // 
             this.openFileDialog1.FileName = "model.obj";
             // 
+            // shadingComboBox
+            // 
+            this.shadingComboBox.FormattingEnabled = true;
+            this.shadingComboBox.Items.AddRange(new object[] {
+            "Flat",
+            "Gouraud-Lambert",
+            "Phong-Toon",
+            "Texture"});
+            this.shadingComboBox.Location = new System.Drawing.Point(999, 432);
+            this.shadingComboBox.Name = "shadingComboBox";
+            this.shadingComboBox.Size = new System.Drawing.Size(249, 24);
+            this.shadingComboBox.TabIndex = 39;
+            this.shadingComboBox.SelectedIndexChanged += new System.EventHandler(this.shadingComboBox_SelectedIndexChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(1001, 403);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(64, 16);
+            this.label8.TabIndex = 40;
+            this.label8.Text = "Шейдинг";
+            // 
+            // chkZBuffer
+            // 
+            this.chkZBuffer.AutoSize = true;
+            this.chkZBuffer.Checked = true;
+            this.chkZBuffer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkZBuffer.Location = new System.Drawing.Point(1173, 403);
+            this.chkZBuffer.Name = "chkZBuffer";
+            this.chkZBuffer.Size = new System.Drawing.Size(75, 20);
+            this.chkZBuffer.TabIndex = 41;
+            this.chkZBuffer.Text = "Z-Buffer";
+            this.chkZBuffer.UseVisualStyleBackColor = true;
+            this.chkZBuffer.CheckedChanged += new System.EventHandler(this.chkZBuffer_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1284, 950);
+            this.ClientSize = new System.Drawing.Size(1637, 950);
+            this.Controls.Add(this.chkZBuffer);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.shadingComboBox);
             this.Controls.Add(this.groupBoxFunction);
             this.Controls.Add(this.groupBoxRevolution);
             this.Controls.Add(this.groupBoxObj);
@@ -1132,19 +972,6 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxLighting;
-        private System.Windows.Forms.ComboBox shadingComboBox;
-        private System.Windows.Forms.Label lblShading;
-        private System.Windows.Forms.NumericUpDown lightZNum;
-        private System.Windows.Forms.NumericUpDown lightYNum;
-        private System.Windows.Forms.NumericUpDown lightXNum;
-        private System.Windows.Forms.Label lblLightZ;
-        private System.Windows.Forms.Label lblLightY;
-        private System.Windows.Forms.Label lblLightX;
-        private System.Windows.Forms.Label lblLightPosition;
-        private System.Windows.Forms.GroupBox groupBoxTexturing;
-        private System.Windows.Forms.ComboBox textureComboBox;
-        private System.Windows.Forms.Label lblTexture;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox reflectionComboBox;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1174,8 +1001,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown axisXNumeric;
         private System.Windows.Forms.Label label1;
-
-        // Новые элементы для задания
         private System.Windows.Forms.GroupBox groupBoxObj;
         private System.Windows.Forms.Button btnSaveObj;
         private System.Windows.Forms.Button btnLoadObj;
@@ -1203,5 +1028,8 @@
         private System.Windows.Forms.Label lblFunction;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ComboBox shadingComboBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox chkZBuffer;
     }
 }

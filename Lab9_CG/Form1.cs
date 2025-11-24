@@ -1,4 +1,3 @@
-using Lab7_CG;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Lab7_CG
 {
@@ -16,9 +14,7 @@ namespace Lab7_CG
         private enum AffineOp { Move = 0, Scaling, Rotation, LineRotation, AxisXRotation, AxisYRotation, AxisZRotation }
         private enum Operation { Reflect_XY = 0, Reflect_YZ = 1, Reflect_XZ = 2 }
         public enum Projection { Perspective, Orthographic }
-
-        public enum ShadingMode { None = 0, Flat, Gouraud, Phong }
-        public enum TextureMode { None = 0, SolidColor, Checkerboard, Image }
+        public enum ShadingMode { Flat, GouraudLambert, PhongToon, Texture }
 
         Graphics g;
         string currPlane = "XY";
@@ -36,25 +32,29 @@ namespace Lab7_CG
         private float rotationAngle = 0;
         private bool useZBuffer = true;
         private Projection currentProjection = Projection.Perspective;
+        private ShadingMode currentShading = ShadingMode.GouraudLambert;
         private float cameraMoveSpeed = 10f;
         private float cameraRotationSpeed = 2f;
 
-        private ShadingMode currentShading = ShadingMode.None;
-        private TextureMode currentTexture = TextureMode.None;
-        private Vertex lightPosition = new Vertex(500, 500, 1000);
-        private Color objectColor = Color.LightBlue;
-        private Color lightColor = Color.White;
-        private float ambientIntensity = 0.2f;
-        private float diffuseIntensity = 0.7f;
-        private float specularIntensity = 0.5f;
-        private float shininess = 32f;
-        private Bitmap textureImage = null;
-        private int textureSize = 64;
+        // Освещение
+        private Vertex lightPosition = new Vertex(200, 200, 500);
+        private Color objectColor = Color.LightSkyBlue;
+        private Bitmap texture;
+
+        // UI элементы для света
+        private NumericUpDown numericLightX;
+        private NumericUpDown numericLightY;
+        private NumericUpDown numericLightZ;
+        private Label lblLightPos;
+        private Button btnUpdateLight;
+        private ColorDialog colorDialog1;
+        private Button btnObjectColor;
+
         public Form1()
         {
             InitializeComponent();
+            InitializeCustomComponents();
 
-            // Инициализация камеры
             camera = new Camera(
                 new Vertex(pictureBox1.Width / 2, pictureBox1.Height / 2, 10000),
                 yaw: 0,
@@ -64,10 +64,17 @@ namespace Lab7_CG
             this.KeyPreview = true;
             this.KeyDown += Form1_KeyDown;
 
-           
-
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
+
+            try
+            {
+                texture = CreateTestGridTexture(512, 512);
+            }
+            catch
+            {
+                texture = null;
+            }
 
             currentPolyhedron = PolyHedron.GetCube()
                                               .Scaled(100, 100, 100)
@@ -87,59 +94,199 @@ namespace Lab7_CG
                 reflectionComboBox.SelectedIndex = 0;
 
             if (shadingComboBox.Items.Count > 0)
-                shadingComboBox.SelectedIndex = 0;
+                shadingComboBox.SelectedIndex = 1;
 
-            if (textureComboBox.Items.Count > 0)
-                textureComboBox.SelectedIndex = 0;
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
             UpdateCameraInfo();
-            RenderScene();
-
         }
 
-
-        private void shadingComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private Bitmap CreateTestGridTexture(int width, int height)
         {
-            currentShading = (ShadingMode)shadingComboBox.SelectedIndex;
-            RenderScene();
-        }
-
-        private void textureComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            currentTexture = (TextureMode)textureComboBox.SelectedIndex;
-            if (currentTexture == TextureMode.Image)
+            var texture = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(texture))
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif";
-                if (dialog.ShowDialog() == DialogResult.OK)
+                // Заливаем белым
+                g.Clear(Color.White);
+
+                // Рисуем сетку
+                using (var pen = new Pen(Color.Red, 2))
                 {
-                    textureImage = new Bitmap(dialog.FileName);
+                    // Вертикальные линии
+                    for (int x = 0; x < width; x += width / 4)
+                    {
+                        g.DrawLine(pen, x, 0, x, height);
+                    }
+
+                    // Горизонтальные линии
+                    for (int y = 0; y < height; y += height / 3)
+                    {
+                        g.DrawLine(pen, 0, y, width, y);
+                    }
                 }
-                else
+
+                // Добавляем номера для ориентации
+                using (var font = new Font("Arial", 20))
+                using (var brush = new SolidBrush(Color.Blue))
                 {
-                    currentTexture = TextureMode.None;
-                    textureComboBox.SelectedIndex = 0;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            g.DrawString($"{i},{j}", font, brush, i * (width / 4) + 10, j * (height / 3) + 10);
+                        }
+                    }
                 }
             }
-            RenderScene();
+            return texture;
         }
 
-        private void lightXNum_ValueChanged(object sender, EventArgs e)
+        private Button btnLoadTexture;
+        private Button btnResetTexture;
+        private Label lblTextureInfo;
+        private void InitializeCustomComponents()
         {
-            lightPosition = new Vertex((float)lightXNum.Value, lightPosition.Y, lightPosition.Z);
-            RenderScene();
+            // btnLoadTexture
+            this.btnLoadTexture = new Button();
+            this.btnLoadTexture.Location = new Point(1300, 240);
+            this.btnLoadTexture.Name = "btnLoadTexture";
+            this.btnLoadTexture.Size = new Size(95, 27);
+            this.btnLoadTexture.TabIndex = 45;
+            this.btnLoadTexture.Text = "Загрузить текстуру";
+            this.btnLoadTexture.UseVisualStyleBackColor = true;
+            this.btnLoadTexture.Click += new EventHandler(this.btnLoadTexture_Click);
+
+            // btnResetTexture
+            this.btnResetTexture = new Button();
+            this.btnResetTexture.Location = new Point(1405, 240);
+            this.btnResetTexture.Name = "btnResetTexture";
+            this.btnResetTexture.Size = new Size(95, 27);
+            this.btnResetTexture.TabIndex = 46;
+            this.btnResetTexture.Text = "Сбросить текстуру";
+            this.btnResetTexture.UseVisualStyleBackColor = true;
+            this.btnResetTexture.Click += new EventHandler(this.btnResetTexture_Click);
+
+            // lblTextureInfo
+            this.lblTextureInfo = new Label();
+            this.lblTextureInfo.AutoSize = true;
+            this.lblTextureInfo.Location = new Point(1300, 270);
+            this.lblTextureInfo.Name = "lblTextureInfo";
+            this.lblTextureInfo.Size = new Size(120, 16);
+            this.lblTextureInfo.TabIndex = 47;
+            this.lblTextureInfo.Text = "Текстура: стандартная";
+
+            // Добавление компонентов на форму
+            this.Controls.Add(this.btnLoadTexture);
+            this.Controls.Add(this.btnResetTexture);
+            this.Controls.Add(this.lblTextureInfo);
+
+            // Инициализация компонентов для управления светом
+            this.lblLightPos = new Label();
+            this.numericLightX = new NumericUpDown();
+            this.numericLightY = new NumericUpDown();
+            this.numericLightZ = new NumericUpDown();
+            this.btnUpdateLight = new Button();
+            this.btnObjectColor = new Button();
+            this.colorDialog1 = new ColorDialog();
+
+            // lblLightPos
+            this.lblLightPos.AutoSize = true;
+            this.lblLightPos.Location = new Point(1300, 120);
+            this.lblLightPos.Name = "lblLightPos";
+            this.lblLightPos.Size = new Size(130, 16);
+            this.lblLightPos.TabIndex = 42;
+            this.lblLightPos.Text = "Источник света X,Y,Z";
+
+            // numericLightX
+            this.numericLightX.Location = new Point(1300, 140);
+            this.numericLightX.Minimum = -1000;
+            this.numericLightX.Maximum = 1000;
+            this.numericLightX.Value = 200;
+            this.numericLightX.Width = 60;
+
+            // numericLightY
+            this.numericLightY.Location = new Point(1370, 140);
+            this.numericLightY.Minimum = -1000;
+            this.numericLightY.Maximum = 1000;
+            this.numericLightY.Value = 200;
+            this.numericLightY.Width = 60;
+
+            // numericLightZ
+            this.numericLightZ.Location = new Point(1440, 140);
+            this.numericLightZ.Minimum = -1000;
+            this.numericLightZ.Maximum = 10000;
+            this.numericLightZ.Value = 500;
+            this.numericLightZ.Width = 60;
+
+            // btnUpdateLight
+            this.btnUpdateLight.Location = new Point(1300, 170);
+            this.btnUpdateLight.Name = "btnUpdateLight";
+            this.btnUpdateLight.Size = new Size(200, 27);
+            this.btnUpdateLight.TabIndex = 43;
+            this.btnUpdateLight.Text = "Обновить источник света";
+            this.btnUpdateLight.UseVisualStyleBackColor = true;
+            this.btnUpdateLight.Click += new EventHandler(this.btnUpdateLight_Click);
+
+            // btnObjectColor
+            this.btnObjectColor.Location = new Point(1300, 205);
+            this.btnObjectColor.Name = "btnObjectColor";
+            this.btnObjectColor.Size = new Size(200, 27);
+            this.btnObjectColor.TabIndex = 44;
+            this.btnObjectColor.Text = "Цвет объекта...";
+            this.btnObjectColor.UseVisualStyleBackColor = true;
+            this.btnObjectColor.Click += new EventHandler(this.btnObjectColor_Click);
+
+            // Добавление компонентов на форму
+            this.Controls.Add(this.lblLightPos);
+            this.Controls.Add(this.numericLightX);
+            this.Controls.Add(this.numericLightY);
+            this.Controls.Add(this.numericLightZ);
+            this.Controls.Add(this.btnUpdateLight);
+            this.Controls.Add(this.btnObjectColor);
         }
 
-        private void lightYNum_ValueChanged(object sender, EventArgs e)
+        private void btnLoadTexture_Click(object sender, EventArgs e)
         {
-            lightPosition = new Vertex(lightPosition.X, (float)lightYNum.Value, lightPosition.Z);
-            RenderScene();
+            openFileDialog1.Filter = "Image Files (*.bmp;*.jpg;*.jpeg;*.png;*.gif)|*.bmp;*.jpg;*.jpeg;*.png;*.gif|All files (*.*)|*.*";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var newTexture = new Bitmap(openFileDialog1.FileName);
+                    texture = newTexture;
+                    lblTextureInfo.Text = $"Текстура: {System.IO.Path.GetFileName(openFileDialog1.FileName)}";
+                    RenderScene();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки текстуры: " + ex.Message);
+                }
+            }
         }
 
-        private void lightZNum_ValueChanged(object sender, EventArgs e)
+        private void btnResetTexture_Click(object sender, EventArgs e)
         {
-            lightPosition = new Vertex(lightPosition.X, lightPosition.Y, (float)lightZNum.Value);
-            RenderScene();
+            try
+            {
+                texture = new Bitmap(64, 64);
+                using (var gTex = Graphics.FromImage(texture))
+                {
+                    gTex.Clear(Color.White);
+                    using (var brush = new SolidBrush(Color.Red))
+                        gTex.FillRectangle(brush, 0, 0, 32, 32);
+                    using (var brush = new SolidBrush(Color.Blue))
+                        gTex.FillRectangle(brush, 32, 0, 32, 32);
+                    using (var brush = new SolidBrush(Color.Green))
+                        gTex.FillRectangle(brush, 0, 32, 32, 32);
+                    using (var brush = new SolidBrush(Color.Yellow))
+                        gTex.FillRectangle(brush, 32, 32, 32, 32);
+                }
+                lblTextureInfo.Text = "Текстура: стандартная";
+                RenderScene();
+            }
+            catch
+            {
+                texture = null;
+            }
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -151,22 +298,22 @@ namespace Lab7_CG
 
             switch (e.KeyCode)
             {
-                case Keys.W: 
+                case Keys.W:
                     camera.Move(camera.Direction * moveSpeed);
                     cameraMoved = true;
                     break;
 
-                case Keys.S: 
+                case Keys.S:
                     camera.Move(-camera.Direction * moveSpeed);
                     cameraMoved = true;
                     break;
 
-                case Keys.A: 
+                case Keys.A:
                     camera.Move(-camera.Right * moveSpeed);
                     cameraMoved = true;
                     break;
 
-                case Keys.D: 
+                case Keys.D:
                     camera.Move(camera.Right * moveSpeed);
                     cameraMoved = true;
                     break;
@@ -176,7 +323,7 @@ namespace Lab7_CG
                     cameraMoved = true;
                     break;
 
-                case Keys.E: 
+                case Keys.E:
                     camera.Move(new Vertex(0, -moveSpeed, 0));
                     cameraMoved = true;
                     break;
@@ -201,12 +348,10 @@ namespace Lab7_CG
                     cameraMoved = true;
                     break;
 
-                case Keys.R: 
+                case Keys.R:
                     ResetCamera();
                     cameraMoved = true;
                     break;
-
-               
             }
 
             if (cameraMoved)
@@ -221,11 +366,9 @@ namespace Lab7_CG
         {
             camera.Position = new Vertex(pictureBox1.Width / 2, pictureBox1.Height / 2, 10000);
             camera.Yaw = 0;
-            camera.Pitch = -10; 
+            camera.Pitch = -10;
             camera.UpdateVectors();
         }
-
-        
 
         private void UpdateCameraInfo()
         {
@@ -234,30 +377,29 @@ namespace Lab7_CG
             textBox3.Text = $"Yaw: {camera.Yaw:F1}°, Pitch: {camera.Pitch:F1}°";
         }
 
-       
-
         private void RenderScene()
         {
             g.Clear(pictureBox1.BackColor);
 
-            RenderWithZBuffer();            
+            if (useZBuffer)
+                RenderWithZBuffer();
+            else
+                RenderPolyhedron(currentPolyhedron);
 
             pictureBox1.Invalidate();
         }
+
         private void RenderWithZBuffer()
         {
             if (currentPolyhedron == null) return;
 
             var transformedPolyhedron = ApplyCameraTransform(currentPolyhedron);
-
-            // Используем улучшенный рендеринг с поддержкой освещения и текстурирования
-            transformedPolyhedron.RenderWithLightingAndTextures(g, pictureBox1, camera, currentProjection,
-                currentShading, currentTexture, lightPosition, objectColor, lightColor,
-                ambientIntensity, diffuseIntensity, specularIntensity, shininess, textureImage, textureSize);
+            transformedPolyhedron.RenderWithZBuffer(
+                g, pictureBox1, camera, currentProjection,
+                currentShading, lightPosition, objectColor, texture);
         }
 
-        
-        private void RenderPolyhedronWithZBuffer(PolyHedron polyhedron)
+        private void RenderPolyhedron(PolyHedron polyhedron)
         {
             if (polyhedron == null) return;
 
@@ -266,13 +408,31 @@ namespace Lab7_CG
 
             var transformedPolyhedron = ApplyCameraTransform(scaledPolyhedron);
 
-            transformedPolyhedron.RenderWithZBuffer(g, pictureBox1, camera, currentProjection);
+            // Простой рендеринг линиями
+            foreach (var face in transformedPolyhedron.Faces)
+            {
+                var points = new List<PointF>();
+                foreach (var vertexIndex in face.Vertices)
+                {
+                    Vertex v = transformedPolyhedron.Vertices[vertexIndex];
+                    PointF projectedPoint = v.GetProjection(
+                        currentProjection == Projection.Perspective ? 0 : 1,
+                        pictureBox1.Width / 2,
+                        pictureBox1.Height / 2,
+                        120, 120);
+                    points.Add(projectedPoint);
+                }
 
-            double cX = 0, cY = 0, cZ = 0;
-            polyhedron.FindCenter(polyhedron.Vertices, ref cX, ref cY, ref cZ);
-            textBox1.Text = cX.ToString("F2");
-            textBox2.Text = cY.ToString("F2");
-            textBox3.Text = cZ.ToString("F2");
+                if (points.Count > 1)
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        PointF start = points[i];
+                        PointF end = points[(i + 1) % points.Count];
+                        g.DrawLine(defaultPen, start, end);
+                    }
+                }
+            }
 
             pictureBox1.Invalidate();
         }
@@ -286,85 +446,24 @@ namespace Lab7_CG
             {
                 Vertex worldVertex = transformed.Vertices[i];
 
-                // Преобразуем в однородные координаты
                 Matrix<float> vertexMatrix = new float[1, 4] {
             { worldVertex.X, worldVertex.Y, worldVertex.Z, 1 }
         };
 
-                // Умножаем на матрицу вида
                 Matrix<float> transformedVertex = vertexMatrix * viewMatrix;
 
+                // Сохраняем UV-координаты!
                 transformed.Vertices[i] = new Vertex(
                     transformedVertex[0, 0],
                     transformedVertex[0, 1],
-                    transformedVertex[0, 2]
+                    transformedVertex[0, 2],
+                    worldVertex.U,  // Сохраняем исходные UV
+                    worldVertex.V   // Сохраняем исходные UV
                 );
             }
 
             return transformed;
         }
-
-        
-
-        //private void DrawPolyhedron(PolyHedron polyhedron, string plane)
-        //{
-        //    if (polyhedron == null) return;
-
-        //    float scaleFactor = (float)numericScale.Value;
-        //    g.Clear(pictureBox1.BackColor);
-
-        //    PolyHedron ph = polyhedron.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
-
-        //    foreach (var face in ph.Faces)
-        //    {
-        //        var points = new List<PointF>();
-
-        //        foreach (var vertexIndex in face.Vertices)
-        //        {
-        //            Vertex v = ph.Vertices[vertexIndex];
-        //            Vertex projectedVertex = new Vertex(v.X, v.Y, v.Z);
-        //            PointF projectedPoint = projectedVertex.GetProjection(
-        //                projectionListBox.SelectedIndex < 0 ? 0 : projectionListBox.SelectedIndex,
-        //                pictureBox1.Width / 2,
-        //                pictureBox1.Height / 2,
-        //                (float)axisXNumeric.Value,
-        //                (float)axisYNumeric.Value);
-        //            points.Add(projectedPoint);
-        //        }
-
-        //        if (points.Count > 1)
-        //        {
-        //            for (int i = 0; i < points.Count; i++)
-        //            {
-        //                PointF start = points[i];
-        //                PointF end = points[(i + 1) % points.Count];
-        //                g.DrawLine(defaultPen, start, end);
-        //            }
-        //        }
-        //    }
-
-        //    PointF startProj = rotationLineStart.GetProjection(
-        //        projectionListBox.SelectedIndex < 0 ? 0 : projectionListBox.SelectedIndex,
-        //        pictureBox1.Width / 2,
-        //        pictureBox1.Height / 2,
-        //        (float)axisXNumeric.Value,
-        //        (float)axisYNumeric.Value);
-        //    PointF endProj = rotationLineEnd.GetProjection(
-        //        projectionListBox.SelectedIndex < 0 ? 0 : projectionListBox.SelectedIndex,
-        //        pictureBox1.Width / 2,
-        //        pictureBox1.Height / 2,
-        //        (float)axisXNumeric.Value,
-        //        (float)axisYNumeric.Value);
-        //    g.DrawLine(axisPen, startProj, endProj);
-
-        //    double cX = 0, cY = 0, cZ = 0;
-        //    polyhedron.FindCenter(polyhedron.Vertices, ref cX, ref cY, ref cZ);
-        //    textBox1.Text = cX.ToString("F2");
-        //    textBox2.Text = cY.ToString("F2");
-        //    textBox3.Text = cZ.ToString("F2");
-
-        //    pictureBox1.Invalidate();
-        //}
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -388,24 +487,21 @@ namespace Lab7_CG
                                              .Rotated(20, 20, 0)
                                              .Scaled(100, 100, 100)
                                              .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                                            
                     break;
                 case (int)Figure.DrawIcosahedron:
                     currentPolyhedron = PolyHedron.GetIcosahedron()
                                               .Rotated(10, 10, 0)
                                               .Scaled(150, 150, 150)
                                               .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                                            
                     break;
                 case (int)Figure.DrawDodecahedron:
                     currentPolyhedron = PolyHedron.GetDodecahedron()
                                              .Rotated(10, 10, 0)
                                              .Scaled(200, 200, 200)
                                              .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                                            
                     break;
             }
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void reflectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -421,24 +517,21 @@ namespace Lab7_CG
                     currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
                         .Reflected("XY")
                         .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                    
                     break;
                 case (int)Operation.Reflect_YZ:
                     currPlane = "YZ";
                     currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
                         .Reflected("YZ")
                         .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                    
                     break;
                 case (int)Operation.Reflect_XZ:
                     currPlane = "XZ";
                     currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
                         .Reflected("XZ")
                         .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-                    
                     break;
             }
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
@@ -470,7 +563,6 @@ namespace Lab7_CG
                 case (int)AffineOp.Move:
                     currentPolyhedron = currentPolyhedron
                                                        .Moved((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value);
-                                                       
                     break;
                 case (int)AffineOp.Scaling:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
@@ -478,7 +570,6 @@ namespace Lab7_CG
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Scaled((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
                                                        .Moved(anchor.X, anchor.Y, anchor.Z);
-                                                      
                     break;
                 case (int)AffineOp.Rotation:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
@@ -486,7 +577,6 @@ namespace Lab7_CG
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Rotated((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
                                                        .Moved(anchor.X, anchor.Y, anchor.Z);
-                                                     
                     break;
                 case (int)AffineOp.LineRotation:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
@@ -504,7 +594,6 @@ namespace Lab7_CG
                         .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                         .LineRotated(l, m, n, (float)numericUpDown1.Value)
                         .Moved(anchor.X, anchor.Y, anchor.Z);
-                        
                     break;
                 case (int)AffineOp.AxisXRotation:
                     centerX = 0; centerY = 0; centerZ = 0;
@@ -513,7 +602,6 @@ namespace Lab7_CG
                                                        .Moved((float)-centerX, (float)-centerY, (float)-centerZ)
                                                        .Rotated((float)numericUpDown1.Value, 0, 0)
                                                        .Moved((float)centerX, (float)centerY, (float)centerZ);
-                                                      
                     break;
                 case (int)AffineOp.AxisYRotation:
                     centerX = 0; centerY = 0; centerZ = 0;
@@ -522,7 +610,6 @@ namespace Lab7_CG
                                                        .Moved((float)-centerX, (float)-centerY, (float)-centerZ)
                                                        .Rotated(0, (float)numericUpDown2.Value, 0)
                                                        .Moved((float)centerX, (float)centerY, (float)centerZ);
-                                                       
                     break;
                 case (int)AffineOp.AxisZRotation:
                     centerX = 0; centerY = 0; centerZ = 0;
@@ -531,34 +618,38 @@ namespace Lab7_CG
                                                        .Moved((float)-centerX, (float)-centerY, (float)-centerZ)
                                                        .Rotated(0, 0, (float)numericUpDown2.Value)
                                                        .Moved((float)centerX, (float)centerY, (float)centerZ);
-                                                       
                     break;
             }
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            g.Clear(pictureBox1.BackColor);
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void axisXNumeric_ValueChanged(object sender, EventArgs e)
         {
             axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void axisYNumeric_ValueChanged(object sender, EventArgs e)
         {
             axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void projectionListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            g.Clear(pictureBox1.BackColor);
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            currentProjection = projectionListBox.SelectedIndex == 0 ? Projection.Perspective : Projection.Orthographic;
+            RenderScene();
+        }
+
+        private void shadingComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentShading = (ShadingMode)shadingComboBox.SelectedIndex;
+            RenderScene();
         }
 
         private void btnLoadObj_Click(object sender, EventArgs e)
@@ -571,7 +662,7 @@ namespace Lab7_CG
                     var ph = PolyHedron.LoadFromObj(openFileDialog1.FileName);
                     currentPolyhedron = ph.AutoScaleToFit(pictureBox1.Width, pictureBox1.Height, 20);
                     currPlane = "XY";
-                    RenderPolyhedronWithZBuffer(currentPolyhedron);
+                    RenderScene();
                 }
                 catch (Exception ex)
                 {
@@ -634,7 +725,7 @@ namespace Lab7_CG
             var ph = PolyHedron.BuildSurfaceOfRevolution(profilePoints, axis, segments);
             currentPolyhedron = ph.AutoScaleToFit(pictureBox1.Width, pictureBox1.Height, 20);
             currPlane = "XY";
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
         }
 
         private void btnBuildFunctionSurface_Click(object sender, EventArgs e)
@@ -665,7 +756,33 @@ namespace Lab7_CG
             var ph = PolyHedron.BuildFunctionSurface(funcIndex, xMin, xMax, yMin, yMax, nx, ny);
             currentPolyhedron = ph.AutoScaleToFit(pictureBox1.Width, pictureBox1.Height, 20);
             currPlane = "XY";
-            RenderPolyhedronWithZBuffer(currentPolyhedron);
+            RenderScene();
+        }
+
+        private void chkZBuffer_CheckedChanged(object sender, EventArgs e)
+        {
+            useZBuffer = chkZBuffer.Checked;
+            RenderScene();
+        }
+
+        private void btnUpdateLight_Click(object sender, EventArgs e)
+        {
+            lightPosition = new Vertex(
+                (float)numericLightX.Value,
+                (float)numericLightY.Value,
+                (float)numericLightZ.Value
+            );
+            RenderScene();
+        }
+
+        private void btnObjectColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = objectColor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                objectColor = colorDialog1.Color;
+                RenderScene();
+            }
         }
     }
 
@@ -685,6 +802,10 @@ namespace Lab7_CG
 
         public static implicit operator Vertex(Matrix<T> m)
         {
+            // Сохраняем UV-координаты из исходной вершины (если возможно)
+            // Но проблема: мы не имеем доступа к исходной вершине здесь
+
+            // Временное решение: возвращаем UV = 0, но это не решает проблему
             return new Vertex(Convert.ToSingle(m[0, 0]), Convert.ToSingle(m[0, 1]), Convert.ToSingle(m[0, 2]));
         }
 
@@ -702,7 +823,12 @@ namespace Lab7_CG
 
         public static implicit operator Matrix<T>(Vertex vertex)
         {
-            return new Matrix<T>(vertex);
+            return new Matrix<T>(new T[1, 4] {
+        { (T)Convert.ChangeType(vertex.X, typeof(T)),
+          (T)Convert.ChangeType(vertex.Y, typeof(T)),
+          (T)Convert.ChangeType(vertex.Z, typeof(T)),
+          (T)Convert.ChangeType(1, typeof(T)) }
+    });
         }
 
         public static Matrix<T> operator *(Matrix<T> A, Matrix<T> B)
@@ -745,26 +871,28 @@ namespace Lab7_CG
     public struct Vertex
     {
         public float X { get; private set; }
-
         public float Y { get; private set; }
-
         public float Z { get; private set; }
+        public float U { get; set; }
+        public float V { get; set; }
 
-        public Vertex(float x, float y, float z)
+        public Vertex(float x, float y, float z, float u = 0, float v = 0)
         {
             X = x;
             Y = y;
             Z = z;
+            U = u;
+            V = v;
         }
 
         public static Vertex operator *(Vertex v, float scalar)
         {
-            return new Vertex(v.X * scalar, v.Y * scalar, v.Z * scalar);
+            return new Vertex(v.X * scalar, v.Y * scalar, v.Z * scalar, v.U, v.V);
         }
 
         public static Vertex operator -(Vertex v)
         {
-            return new Vertex(-v.X, -v.Y, -v.Z);
+            return new Vertex(-v.X, -v.Y, -v.Z, v.U, v.V);
         }
 
         public static Vertex operator *(float scalar, Vertex v)
@@ -772,14 +900,22 @@ namespace Lab7_CG
             return v * scalar;
         }
 
-        // Оператор деления на скаляр
         public static Vertex operator /(Vertex v, float scalar)
         {
             if (scalar == 0) throw new DivideByZeroException();
-            return new Vertex(v.X / scalar, v.Y / scalar, v.Z / scalar);
+            return new Vertex(v.X / scalar, v.Y / scalar, v.Z / scalar, v.U, v.V);
         }
 
-        // Находим центр грани
+        public static Vertex operator +(Vertex v1, Vertex v2)
+        {
+            return new Vertex(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.U, v1.V);
+        }
+
+        public static Vertex operator -(Vertex v1, Vertex v2)
+        {
+            return new Vertex(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z, v1.U, v1.V);
+        }
+
         public static Vertex GetFaceCentroid(Face face, List<Vertex> vertices)
         {
             float x = 0, y = 0, z = 0;
@@ -793,7 +929,6 @@ namespace Lab7_CG
             return new Vertex(x / count, y / count, z / count);
         }
 
-        // Находим центр многогранника
         public static Vertex GetPolyhedronCenter(PolyHedron polyhedron)
         {
             float x = 0, y = 0, z = 0;
@@ -808,7 +943,6 @@ namespace Lab7_CG
             return new Vertex(x / count, y / count, z / count);
         }
 
-        // Вычисляем нормаль грани
         public static Vertex GetFaceNormal(Face face, List<Vertex> vertices)
         {
             var v1 = vertices[face.Vertices[0]];
@@ -825,13 +959,11 @@ namespace Lab7_CG
             return new Vertex(nx, ny, nz);
         }
 
-        // Скалярное произведение
         public static float Dot(Vertex v1, Vertex v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }
 
-        // Векторное произведение
         public static Vertex Cross(Vertex v1, Vertex v2)
         {
             return new Vertex(
@@ -841,12 +973,11 @@ namespace Lab7_CG
             ).Normalize();
         }
 
-        // Нормализация
         public Vertex Normalize()
         {
             float length = (float)Math.Sqrt(X * X + Y * Y + Z * Z);
             if (length == 0) return this;
-            return new Vertex(X / length, Y / length, Z / length);
+            return new Vertex(X / length, Y / length, Z / length, U, V);
         }
 
         public float DistanceTo(in Vertex other)
@@ -863,16 +994,6 @@ namespace Lab7_CG
             Matrix<float> mv = v;
             Matrix<float> res = mv * m;
             return res;
-        }
-
-        public static Vertex operator +(Vertex v1, Vertex v2)
-        {
-            return new Vertex(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
-        }
-
-        public static Vertex operator -(Vertex v1, Vertex v2)
-        {
-            return new Vertex(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
         }
 
         public PointF GetProjection(int projIndex, float w, float h, float ax, float ay)
@@ -926,9 +1047,8 @@ namespace Lab7_CG
         public Vertex Up { get; set; }
         public Vertex Right { get; set; }
 
-        // Углы Эйлера для вращения
-        public float Yaw { get; set; }   // Поворот вокруг Y оси
-        public float Pitch { get; set; } // Поворот вокруг X оси
+        public float Yaw { get; set; }
+        public float Pitch { get; set; }
 
         public Matrix<float> ViewMatrix => CreateViewMatrix();
         public Matrix<float> ProjectionMatrix { get; set; }
@@ -942,8 +1062,7 @@ namespace Lab7_CG
 
             Direction = new Vertex(0, 0, -1).Normalize();
 
-            // Инициализация матриц проекции (значения можно настроить)
-            float fov = (float)Math.PI / 3; // 60 градусов
+            float fov = (float)Math.PI / 3;
             float aspectRatio = 1.0f;
             float near = 0.1f;
             float far = 1000f;
@@ -952,21 +1071,16 @@ namespace Lab7_CG
             ProjectionMatrix = Utilities.CreatePerspectiveFieldOfView(fov, aspectRatio, near, far);
         }
 
-        
-
         public void UpdateVectors()
         {
-            // Ограничиваем угол наклона, чтобы камера не переворачивалась
             Pitch = Math.Max(-89f, Math.Min(89f, Pitch));
 
-            // Вычисляем новое направление камеры
             Direction = new Vertex(
                 (float)(Math.Cos(Yaw * Math.PI / 180) * Math.Cos(Pitch * Math.PI / 180)),
                 (float)Math.Sin(Pitch * Math.PI / 180),
                 (float)(Math.Sin(Yaw * Math.PI / 180) * Math.Cos(Pitch * Math.PI / 180))
             ).Normalize();
 
-            // Вычисляем правый вектор и вектор "вверх"
             Right = Vertex.Cross(Direction, new Vertex(0, 1, 0)).Normalize();
             Up = Vertex.Cross(Right, Direction).Normalize();
 
@@ -980,7 +1094,7 @@ namespace Lab7_CG
             { Up.X, Up.Y, Up.Z, -Vertex.Dot(Up, Position) },
             { -Direction.X, -Direction.Y, -Direction.Z, Vertex.Dot(Direction, Position) },
             { 0, 0, 0, 1 }
-    };
+        };
         }
 
         public void Move(Vertex movement)
@@ -1108,11 +1222,69 @@ namespace Lab7_CG
             Normals = new List<Normal>();
         }
 
-        // Методы для расчета нормалей
-        // Методы для расчета нормалей
+        public void ComputeVertexNormals()
+        {
+            if (Vertices.Count == 0) return;
+
+            Normals = new List<Normal>(new Normal[Vertices.Count]);
+
+            // Используем временные структуры для хранения суммы нормалей
+            var sumX = new float[Vertices.Count];
+            var sumY = new float[Vertices.Count];
+            var sumZ = new float[Vertices.Count];
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                sumX[i] = 0;
+                sumY[i] = 0;
+                sumZ[i] = 0;
+            }
+
+            foreach (var face in Faces)
+            {
+                if (face.Vertices.Length < 3) continue;
+
+                Vertex v1 = Vertices[face.Vertices[0]];
+                Vertex v2 = Vertices[face.Vertices[1]];
+                Vertex v3 = Vertices[face.Vertices[2]];
+
+                Vertex edge1 = v2 - v1;
+                Vertex edge2 = v3 - v1;
+
+                Vertex faceNormal = new Vertex(
+                    edge1.Y * edge2.Z - edge1.Z * edge2.Y,
+                    edge1.Z * edge2.X - edge1.X * edge2.Z,
+                    edge1.X * edge2.Y - edge1.Y * edge2.X
+                ).Normalize();
+
+                // Суммируем компоненты нормалей отдельно
+                foreach (int idx in face.Vertices)
+                {
+                    sumX[idx] += faceNormal.X;
+                    sumY[idx] += faceNormal.Y;
+                    sumZ[idx] += faceNormal.Z;
+                }
+            }
+
+            // Нормализуем и создаем нормали, не затрагивая UV-координаты вершин
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                float length = (float)Math.Sqrt(sumX[i] * sumX[i] + sumY[i] * sumY[i] + sumZ[i] * sumZ[i]);
+                if (length > 0)
+                {
+                    Normals[i] = new Normal(sumX[i] / length, sumY[i] / length, sumZ[i] / length);
+                }
+                else
+                {
+                    Normals[i] = new Normal(0, 0, 0);
+                }
+
+                // UV-координаты остаются нетронутыми в Vertices[i]
+            }
+        }
+
         public static void AdjustNormals(PolyHedron polyhedron)
         {
-            // Вычисляем центр объекта
             double centerX = 0, centerY = 0, centerZ = 0;
             polyhedron.FindCenter(polyhedron.Vertices, ref centerX, ref centerY, ref centerZ);
             Vertex center = new Vertex((float)centerX, (float)centerY, (float)centerZ);
@@ -1125,7 +1297,6 @@ namespace Lab7_CG
                     Vertex v2 = polyhedron.Vertices[face.Vertices[1]];
                     Vertex v3 = polyhedron.Vertices[face.Vertices[2]];
 
-                    // Вычисляем нормаль через векторное произведение
                     Vertex edge1 = v2 - v1;
                     Vertex edge2 = v3 - v1;
 
@@ -1135,16 +1306,13 @@ namespace Lab7_CG
                         edge1.X * edge2.Y - edge1.Y * edge2.X
                     );
 
-                    // Нормализуем
                     normal = normal.Normalize();
 
-                    // Проверяем направление нормали относительно центра объекта
                     Vertex faceCenter = polyhedron.GetFaceCenter(face);
                     Vertex toCenter = (center - faceCenter).Normalize();
 
                     float dot = Vertex.Dot(normal, toCenter);
 
-                    // Если нормаль направлена к центру, инвертируем ее
                     if (dot > 0)
                     {
                         normal = new Vertex(-normal.X, -normal.Y, -normal.Z);
@@ -1155,14 +1323,11 @@ namespace Lab7_CG
             }
         }
 
-        // Отсечение нелицевых граней
-        // Отсечение нелицевых граней
         public PolyHedron FilterVisibleFaces(Camera camera, Form1.Projection proj)
         {
             var visiblePolyhedron = this.Clone();
             visiblePolyhedron.Faces = new List<Face>();
 
-            // Вычисляем нормали для всех граней
             AdjustNormals(this);
 
             foreach (var face in this.Faces)
@@ -1170,13 +1335,10 @@ namespace Lab7_CG
                 Vertex faceCenter = GetFaceCenter(face);
                 Vertex normal = face.Normal.Normalize();
 
-                // Вектор от грани к камере (в мировых координатах)
                 Vertex toCamera = (camera.Position - faceCenter).Normalize();
 
-                // Скалярное произведение нормали и направления к камере
                 float dotProduct = Vertex.Dot(normal, toCamera);
 
-                // Грань видима если нормаль направлена к камере
                 bool isVisible = dotProduct > 0;
 
                 if (isVisible)
@@ -1188,19 +1350,240 @@ namespace Lab7_CG
             return visiblePolyhedron;
         }
 
-        // Z-буфер рендеринг
-        public void RenderWithZBuffer(Graphics g, PictureBox pictureBox, Camera camera, Form1.Projection proj)
+        private Color LambertColor(Vertex normal, Vertex lightDir, Color baseColor)
         {
-            // Создаем Z-буфер
+            var n = normal.Normalize();
+            var l = lightDir.Normalize();
+
+            float ndotl = Math.Max(0f, Vertex.Dot(n, l));
+            float Ia = 0.1f;
+            float Id = 0.9f;
+
+            float k = Ia + Id * ndotl;
+            k = Math.Min(1f, Math.Max(0f, k));
+
+            int r = (int)(baseColor.R * k);
+            int g = (int)(baseColor.G * k);
+            int b = (int)(baseColor.B * k);
+
+            return Color.FromArgb(r, g, b);
+        }
+
+        private float ToonIntensity(float lambert)
+        {
+            if (lambert <= 0.1f) return 0.0f;
+            if (lambert <= 0.4f) return 0.3f;
+            if (lambert <= 0.7f) return 0.6f;
+            return 1.0f;
+        }
+
+        private Color PhongToonColor(Vertex normal, Vertex lightDir, Color baseColor)
+        {
+            var n = normal.Normalize();
+            var l = lightDir.Normalize();
+
+            float ndotl = Math.Max(0f, Vertex.Dot(n, l));
+            float toon = ToonIntensity(ndotl);
+
+            float Ia = 0.1f;
+            float Id = 0.9f;
+
+            float k = Ia + Id * toon;
+            k = Math.Min(1f, Math.Max(0f, k));
+
+            int r = (int)(baseColor.R * k);
+            int g = (int)(baseColor.G * k);
+            int b = (int)(baseColor.B * k);
+
+            return Color.FromArgb(r, g, b);
+        }
+
+        private void DrawTriangleGouraud(
+            Bitmap bmp,
+            float[,] zBuffer,
+            Vertex v0, Vertex v1, Vertex v2,
+            PointF p0, PointF p1, PointF p2,
+            Color c0, Color c1, Color c2)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            int minX = (int)Math.Floor(Math.Min(p0.X, Math.Min(p1.X, p2.X)));
+            int maxX = (int)Math.Ceiling(Math.Max(p0.X, Math.Max(p1.X, p2.X)));
+            int minY = (int)Math.Floor(Math.Min(p0.Y, Math.Min(p1.Y, p2.Y)));
+            int maxY = (int)Math.Ceiling(Math.Max(p0.Y, Math.Max(p1.Y, p2.Y)));
+
+            minX = Math.Max(minX, 0);
+            minY = Math.Max(minY, 0);
+            maxX = Math.Min(maxX, width - 1);
+            maxY = Math.Min(maxY, height - 1);
+
+            float denom = (p1.Y - p2.Y) * (p0.X - p2.X) + (p2.X - p1.X) * (p0.Y - p2.Y);
+            if (Math.Abs(denom) < 1e-6f) return;
+
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    float lambda0 = ((p1.Y - p2.Y) * (x - p2.X) + (p2.X - p1.X) * (y - p2.Y)) / denom;
+                    float lambda1 = ((p2.Y - p0.Y) * (x - p2.X) + (p0.X - p2.X) * (y - p2.Y)) / denom;
+                    float lambda2 = 1f - lambda0 - lambda1;
+
+                    if (lambda0 < 0 || lambda1 < 0 || lambda2 < 0) continue;
+
+                    float z = lambda0 * v0.Z + lambda1 * v1.Z + lambda2 * v2.Z;
+
+                    if (z < zBuffer[x, y])
+                    {
+                        zBuffer[x, y] = z;
+
+                        int r = (int)(lambda0 * c0.R + lambda1 * c1.R + lambda2 * c2.R);
+                        int g = (int)(lambda0 * c0.G + lambda1 * c1.G + lambda2 * c2.G);
+                        int b = (int)(lambda0 * c0.B + lambda1 * c1.B + lambda2 * c2.B);
+
+                        bmp.SetPixel(x, y, Color.FromArgb(r, g, b));
+                    }
+                }
+            }
+        }
+
+        private void DrawTrianglePhongToon(
+            Bitmap bmp,
+            float[,] zBuffer,
+            Vertex v0, Vertex v1, Vertex v2,
+            PointF p0, PointF p1, PointF p2,
+            Vertex n0, Vertex n1, Vertex n2,
+            Vertex lightDir,
+            Color baseColor)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            int minX = (int)Math.Floor(Math.Min(p0.X, Math.Min(p1.X, p2.X)));
+            int maxX = (int)Math.Ceiling(Math.Max(p0.X, Math.Max(p1.X, p2.X)));
+            int minY = (int)Math.Floor(Math.Min(p0.Y, Math.Min(p1.Y, p2.Y)));
+            int maxY = (int)Math.Ceiling(Math.Max(p0.Y, Math.Max(p1.Y, p2.Y)));
+
+            minX = Math.Max(minX, 0);
+            minY = Math.Max(minY, 0);
+            maxX = Math.Min(maxX, width - 1);
+            maxY = Math.Min(maxY, height - 1);
+
+            float denom = (p1.Y - p2.Y) * (p0.X - p2.X) + (p2.X - p1.X) * (p0.Y - p2.Y);
+            if (Math.Abs(denom) < 1e-6f) return;
+
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    float lambda0 = ((p1.Y - p2.Y) * (x - p2.X) + (p2.X - p1.X) * (y - p2.Y)) / denom;
+                    float lambda1 = ((p2.Y - p0.Y) * (x - p2.X) + (p0.X - p2.X) * (y - p2.Y)) / denom;
+                    float lambda2 = 1f - lambda0 - lambda1;
+
+                    if (lambda0 < 0 || lambda1 < 0 || lambda2 < 0) continue;
+
+                    float z = lambda0 * v0.Z + lambda1 * v1.Z + lambda2 * v2.Z;
+
+                    if (z < zBuffer[x, y])
+                    {
+                        zBuffer[x, y] = z;
+
+                        Vertex n = (n0 * lambda0 + n1 * lambda1 + n2 * lambda2).Normalize();
+                        Color c = PhongToonColor(n, lightDir, baseColor);
+
+                        bmp.SetPixel(x, y, c);
+                    }
+                }
+            }
+        }
+
+        private void DrawTriangleTextured(
+    Bitmap bmp,
+    float[,] zBuffer,
+    Vertex v0, Vertex v1, Vertex v2,
+    PointF p0, PointF p1, PointF p2,
+    Bitmap texture)
+        {
+            // В начале DrawTriangleTextured
+            Console.WriteLine($"UV coords: v0=({v0.U}, {v0.V}), v1=({v1.U}, {v1.V}), v2=({v2.U}, {v2.V})");
+            //v0 = new Vertex(v0.X, v0.Y, v0.Z, 0.0f, 0.0f);
+            //v1 = new Vertex(v1.X, v1.Y, v1.Z, 1.0f, 0.0f);
+            //v2 = new Vertex(v2.X, v2.Y, v2.Z, 0.5f, 1.0f);
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            int minX = (int)Math.Floor(Math.Min(p0.X, Math.Min(p1.X, p2.X)));
+            int maxX = (int)Math.Ceiling(Math.Max(p0.X, Math.Max(p1.X, p2.X)));
+            int minY = (int)Math.Floor(Math.Min(p0.Y, Math.Min(p1.Y, p2.Y)));
+            int maxY = (int)Math.Ceiling(Math.Max(p0.Y, Math.Max(p1.Y, p2.Y)));
+
+            minX = Math.Max(minX, 0);
+            minY = Math.Max(minY, 0);
+            maxX = Math.Min(maxX, width - 1);
+            maxY = Math.Min(maxY, height - 1);
+
+            float denom = (p1.Y - p2.Y) * (p0.X - p2.X) + (p2.X - p1.X) * (p0.Y - p2.Y);
+            if (Math.Abs(denom) < 1e-6f) return;
+
+            int texW = texture.Width;
+            int texH = texture.Height;
+
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    // Вычисляем барицентрические координаты
+                    float lambda0 = ((p1.Y - p2.Y) * (x - p2.X) + (p2.X - p1.X) * (y - p2.Y)) / denom;
+                    float lambda1 = ((p2.Y - p0.Y) * (x - p2.X) + (p0.X - p2.X) * (y - p2.Y)) / denom;
+                    float lambda2 = 1f - lambda0 - lambda1;
+
+                    if (lambda0 < 0 || lambda1 < 0 || lambda2 < 0) continue;
+
+                    float z = lambda0 * v0.Z + lambda1 * v1.Z + lambda2 * v2.Z;
+
+                    if (z < zBuffer[x, y])
+                    {
+                        zBuffer[x, y] = z;
+
+                        // Линейная интерполяция UV
+                        float u = lambda0 * v0.U + lambda1 * v1.U + lambda2 * v2.U;
+                        float vCoord = lambda0 * v0.V + lambda1 * v1.V + lambda2 * v2.V;
+
+                        // Зацикливание текстурных координат
+                        u = u - (float)Math.Floor(u);
+                        vCoord = vCoord - (float)Math.Floor(vCoord);
+
+                        int texX = (int)(u * (texW - 1));
+                        int texY = (int)(vCoord * (texH - 1));
+
+                        texX = Math.Max(0, Math.Min(texX, texW - 1));
+                        texY = Math.Max(0, Math.Min(texY, texH - 1));
+
+                        Color texColor = texture.GetPixel(texX, texY);
+                        bmp.SetPixel(x, y, texColor);
+                    }
+                }
+            }
+        }
+
+        public void RenderWithZBuffer(
+            Graphics g,
+            PictureBox pictureBox,
+            Camera camera,
+            Form1.Projection proj,
+            Form1.ShadingMode shadingMode,
+            Vertex lightPos,
+            Color objectColor,
+            Bitmap texture = null)
+        {
             float[,] zBuffer = new float[pictureBox.Width, pictureBox.Height];
             for (int x = 0; x < pictureBox.Width; x++)
                 for (int y = 0; y < pictureBox.Height; y++)
                     zBuffer[x, y] = float.MaxValue;
 
-            // Фильтруем видимые грани с более мягкими критериями
             var visiblePolyhedron = FilterVisibleFaces(camera, proj);
+            visiblePolyhedron.ComputeVertexNormals();
 
-            // Сортируем грани по глубине (задние рисуем первыми)
             var sortedFaces = visiblePolyhedron.Faces
                 .OrderBy(face =>
                 {
@@ -1209,33 +1592,74 @@ namespace Lab7_CG
                 })
                 .ToList();
 
-            // Рисуем грани
+            Bitmap bmp = (Bitmap)pictureBox.Image;
+
             foreach (var face in sortedFaces)
             {
-                var points = new List<PointF>();
-                var vertices3D = new List<Vertex>();
+                var v3d = new List<Vertex>();
+                var v2d = new List<PointF>();
+                var vColors = new List<Color>();
+                var vNormals = new List<Vertex>();
 
-                foreach (var vertexIndex in face.Vertices)
+                foreach (var idx in face.Vertices)
                 {
-                    Vertex v = visiblePolyhedron.Vertices[vertexIndex];
-                    vertices3D.Add(v);
+                    Vertex v = visiblePolyhedron.Vertices[idx];
+                    v3d.Add(v);
                     PointF projectedPoint = v.GetProjection(
                         proj == Form1.Projection.Perspective ? 0 : 1,
                         pictureBox.Width / 2,
                         pictureBox.Height / 2,
                         120, 120);
-                    points.Add(projectedPoint);
+                    v2d.Add(projectedPoint);
+
+                    Normal n = visiblePolyhedron.Normals[idx];
+                    vNormals.Add(new Vertex(n.NX, n.NY, n.NZ));
                 }
 
-                if (points.Count > 2)
-                {
-                    float avgDepth = vertices3D.Average(v => v.DistanceTo(camera.Position));
+                if (v3d.Count < 3) continue;
 
-                    using (Brush brush = new SolidBrush(GetFaceColor(face)))
-                    using (Pen pen = new Pen(Color.Black, 1))
+                Vertex lightDir = (lightPos - Vertex.GetPolyhedronCenter(visiblePolyhedron)).Normalize();
+
+                if (shadingMode == Form1.ShadingMode.GouraudLambert)
+                {
+                    vColors.Clear();
+                    for (int i = 0; i < v3d.Count; i++)
                     {
-                        g.FillPolygon(brush, points.ToArray());
-                        g.DrawPolygon(pen, points.ToArray());
+                        Color c = LambertColor(vNormals[i], lightDir, objectColor);
+                        vColors.Add(c);
+                    }
+                }
+
+                for (int i = 1; i < v3d.Count - 1; i++)
+                {
+                    Vertex vv0 = v3d[0];
+                    Vertex vv1 = v3d[i];
+                    Vertex vv2 = v3d[i + 1];
+
+                    PointF pp0 = v2d[0];
+                    PointF pp1 = v2d[i];
+                    PointF pp2 = v2d[i + 1];
+
+                    if (shadingMode == Form1.ShadingMode.GouraudLambert)
+                    {
+                        Color cc0 = vColors[0];
+                        Color cc1 = vColors[i];
+                        Color cc2 = vColors[i + 1];
+
+                        DrawTriangleGouraud(bmp, zBuffer, vv0, vv1, vv2, pp0, pp1, pp2, cc0, cc1, cc2);
+                    }
+                    else if (shadingMode == Form1.ShadingMode.PhongToon)
+                    {
+                        Vertex nn0 = vNormals[0];
+                        Vertex nn1 = vNormals[i];
+                        Vertex nn2 = vNormals[i + 1];
+
+                        DrawTrianglePhongToon(bmp, zBuffer, vv0, vv1, vv2, pp0, pp1, pp2,
+                            nn0, nn1, nn2, lightDir, objectColor);
+                    }
+                    else if (shadingMode == Form1.ShadingMode.Texture && texture != null)
+                    {
+                        DrawTriangleTextured(bmp, zBuffer, vv0, vv1, vv2, pp0, pp1, pp2, texture);
                     }
                 }
             }
@@ -1246,15 +1670,12 @@ namespace Lab7_CG
             if (face.Normal.X == 0 && face.Normal.Y == 0 && face.Normal.Z == 0)
                 return Color.LightBlue;
 
-            
-
             int r = Math.Max(0, Math.Min(255, (int)((face.Normal.X + 1) * 127.5)));
             int g = Math.Max(0, Math.Min(255, (int)((face.Normal.Y + 1) * 127.5)));
             int b = Math.Max(0, Math.Min(255, (int)((face.Normal.Z + 1) * 127.5)));
 
             return Color.FromArgb(r, g, b);
         }
-        
 
         public void FindCenter(List<Vertex> vertices, ref double a, ref double b, ref double c)
         {
@@ -1275,18 +1696,40 @@ namespace Lab7_CG
         public PolyHedron LineRotated(float l, float m, float n, float angle)
         {
             var newPoly = this.Clone();
+
             double angleRadians = (double)angle * (Math.PI / 180);
             float cos = (float)Math.Cos(angleRadians);
             float sin = (float)Math.Sin(angleRadians);
-            Matrix<float> RxMatrix = new float[4, 4]
-            {
-                { l*l+cos*(1-l*l), l*(1-cos)*m+n*sin,  l*(1-cos)*n-m*sin,  0 },
-                { l*(1-cos)*m-n*sin, m*m+cos*(1-m*m), m*(1-cos)*n+l*sin,  0 },
-                { l*(1-cos)*n+m*sin, m*(1-cos)*n-l*sin,  n*n+cos*(1-n*n),  0 },
-                { 0,  0,  0,  1 }
-            };
+            float oneMinusCos = 1 - cos;
+
+            // Матрица поворота вокруг произвольной оси
+            float[,] rotationMatrix = new float[3, 3] {
+        { l*l*oneMinusCos + cos,      l*m*oneMinusCos - n*sin, l*n*oneMinusCos + m*sin },
+        { m*l*oneMinusCos + n*sin,    m*m*oneMinusCos + cos,   m*n*oneMinusCos - l*sin },
+        { n*l*oneMinusCos - m*sin,    n*m*oneMinusCos + l*sin, n*n*oneMinusCos + cos   }
+    };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
-                newPoly.Vertices[i] *= RxMatrix;
+            {
+                var vertex = newPoly.Vertices[i];
+                float x = vertex.X;
+                float y = vertex.Y;
+                float z = vertex.Z;
+
+                float newX = x * rotationMatrix[0, 0] + y * rotationMatrix[0, 1] + z * rotationMatrix[0, 2];
+                float newY = x * rotationMatrix[1, 0] + y * rotationMatrix[1, 1] + z * rotationMatrix[1, 2];
+                float newZ = x * rotationMatrix[2, 0] + y * rotationMatrix[2, 1] + z * rotationMatrix[2, 2];
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    newX,
+                    newY,
+                    newZ,
+                    vertex.U,
+                    vertex.V
+                );
+            }
+
             return newPoly;
         }
 
@@ -1361,36 +1804,41 @@ namespace Lab7_CG
             return newPoly;
         }
 
-        public PolyHedron Scaled(float c1, float c2, float c3)
-        {
-            var newPoly = this.Clone();
-            Matrix<float> translationMatrix = new float[4, 4]
-            {
-                { c1, 0,  0,  0 },
-                { 0,  c2, 0,  0 },
-                { 0,  0,  c3, 0 },
-                { 0,  0,  0,  1 }
-            };
-            for (int i = 0; i < newPoly.Vertices.Count; i++)
-                newPoly.Vertices[i] *= translationMatrix;
-            return newPoly;
-        }
-
         public PolyHedron Moved(float a, float b, float c)
         {
             var newPoly = this.Clone();
 
-            Matrix<float> translationMatrix = new float[4, 4]
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                { 1,  0,  0,  0 },
-                { 0,  1,  0,  0 },
-                { 0,  0,  1,  0 },
-                { a,  b,  c,  1 }
-            };
+                var vertex = newPoly.Vertices[i];
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    vertex.X + a,
+                    vertex.Y + b,
+                    vertex.Z + c,
+                    vertex.U,
+                    vertex.V
+                );
+            }
+
+            return newPoly;
+        }
+
+        public PolyHedron Scaled(float c1, float c2, float c3)
+        {
+            var newPoly = this.Clone();
 
             for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                newPoly.Vertices[i] *= translationMatrix;
+                var vertex = newPoly.Vertices[i];
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    vertex.X * c1,
+                    vertex.Y * c2,
+                    vertex.Z * c3,
+                    vertex.U,
+                    vertex.V
+                );
             }
 
             return newPoly;
@@ -1401,21 +1849,23 @@ namespace Lab7_CG
             var newPoly = this.Clone();
 
             double angleRadians = (double)alpha * (Math.PI / 180);
-
             float cos = (float)Math.Cos(angleRadians);
             float sin = (float)Math.Sin(angleRadians);
 
-            Matrix<float> translationMatrix = new float[4, 4]
-            {
-                { 1,  0,  0,  0 },
-                { 0,  cos, sin,  0 },
-                { 0,  -sin,  cos,  0 },
-                { 0,  0,  0,  1 }
-            };
-
             for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                newPoly.Vertices[i] *= translationMatrix;
+                var vertex = newPoly.Vertices[i];
+                float newY = vertex.Y * cos - vertex.Z * sin;
+                float newZ = vertex.Y * sin + vertex.Z * cos;
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    vertex.X,
+                    newY,
+                    newZ,
+                    vertex.U,
+                    vertex.V
+                );
             }
 
             return newPoly;
@@ -1426,21 +1876,23 @@ namespace Lab7_CG
             var newPoly = this.Clone();
 
             double angleRadians = (double)alpha * (Math.PI / 180);
-
             float cos = (float)Math.Cos(angleRadians);
             float sin = (float)Math.Sin(angleRadians);
 
-            Matrix<float> translationMatrix = new float[4, 4]
-            {
-                { cos,  0,  -sin,  0 },
-                { 0,  1, 0,  0 },
-                { sin,  0,  cos,  0 },
-                { 0,  0,  0,  1 }
-            };
-
             for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                newPoly.Vertices[i] *= translationMatrix;
+                var vertex = newPoly.Vertices[i];
+                float newX = vertex.X * cos + vertex.Z * sin;
+                float newZ = -vertex.X * sin + vertex.Z * cos;
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    newX,
+                    vertex.Y,
+                    newZ,
+                    vertex.U,
+                    vertex.V
+                );
             }
 
             return newPoly;
@@ -1451,21 +1903,23 @@ namespace Lab7_CG
             var newPoly = this.Clone();
 
             double angleRadians = (double)alpha * (Math.PI / 180);
-
             float cos = (float)Math.Cos(angleRadians);
             float sin = (float)Math.Sin(angleRadians);
 
-            Matrix<float> translationMatrix = new float[4, 4]
-            {
-                { cos,  sin,  0,  0 },
-                { -sin, cos, 0,  0 },
-                { 0,  0,  1,  0 },
-                { 0,  0,  0,  1 }
-            };
-
             for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                newPoly.Vertices[i] *= translationMatrix;
+                var vertex = newPoly.Vertices[i];
+                float newX = vertex.X * cos - vertex.Y * sin;
+                float newY = vertex.X * sin + vertex.Y * cos;
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    newX,
+                    newY,
+                    vertex.Z,
+                    vertex.U,
+                    vertex.V
+                );
             }
 
             return newPoly;
@@ -1479,11 +1933,11 @@ namespace Lab7_CG
                 .RotatedZAxis(zAngle);
         }
 
-        // Платоновы тела
         public static PolyHedron GetCube()
         {
             var cube = new PolyHedron();
 
+            // Вершины куба
             cube.Vertices.Add(new Vertex(-1, -1, -1));
             cube.Vertices.Add(new Vertex(1, -1, -1));
             cube.Vertices.Add(new Vertex(1, 1, -1));
@@ -1500,6 +1954,8 @@ namespace Lab7_CG
             cube.Faces.Add(new Face(1, 2, 6, 5));
             cube.Faces.Add(new Face(0, 3, 7, 4));
 
+            cube.ApplyPlanarUV();
+            cube.ComputeVertexNormals();
             return cube;
         }
 
@@ -1507,42 +1963,46 @@ namespace Lab7_CG
         {
             var tetra = new PolyHedron();
 
-            tetra.Vertices.Add(new Vertex(-1, 1, -1));
-            tetra.Vertices.Add(new Vertex(1, -1, -1));
-            tetra.Vertices.Add(new Vertex(1, 1, 1));
-            tetra.Vertices.Add(new Vertex(-1, -1, 1));
+            // Вершины тетраэдра
+            tetra.Vertices.Add(new Vertex(0, 1, 0));       // 0: верх
+            tetra.Vertices.Add(new Vertex(0.94f, -0.33f, 0));     // 1: право-низ
+            tetra.Vertices.Add(new Vertex(-0.47f, -0.33f, 0.82f)); // 2: лево-низ-близко
+            tetra.Vertices.Add(new Vertex(-0.47f, -0.33f, -0.82f));// 3: лево-низ-далеко
 
             tetra.Faces.Add(new Face(0, 1, 2));
-            tetra.Faces.Add(new Face(0, 1, 3));
             tetra.Faces.Add(new Face(0, 2, 3));
-            tetra.Faces.Add(new Face(1, 2, 3));
+            tetra.Faces.Add(new Face(0, 3, 1));
+            tetra.Faces.Add(new Face(1, 3, 2));
 
+            tetra.ApplyPlanarUV();
+            tetra.ComputeVertexNormals();
             return tetra;
         }
 
         public static PolyHedron GetOctahedron()
         {
-            var cube = GetCube();
-
             var octa = new PolyHedron();
 
-            foreach (Face face in cube.Faces)
-            {
-                octa.Vertices.Add(cube.GetFaceCenter(face));
-            }
+            // Вершины октаэдра
+            octa.Vertices.Add(new Vertex(0, 1, 0));    // 0: верх
+            octa.Vertices.Add(new Vertex(1, 0, 0));    // 1: право
+            octa.Vertices.Add(new Vertex(0, 0, 1));    // 2: зад
+            octa.Vertices.Add(new Vertex(-1, 0, 0));   // 3: лево
+            octa.Vertices.Add(new Vertex(0, 0, -1));   // 4: перед
+            octa.Vertices.Add(new Vertex(0, -1, 0));   // 5: низ
 
-            var octaCenters = cube.Scaled(1 / 3f, 1 / 3f, 1 / 3f).Vertices;
+            // Грани октаэдра
+            octa.Faces.Add(new Face(0, 1, 2));
+            octa.Faces.Add(new Face(0, 2, 3));
+            octa.Faces.Add(new Face(0, 3, 4));
+            octa.Faces.Add(new Face(0, 4, 1));
+            octa.Faces.Add(new Face(5, 2, 1));
+            octa.Faces.Add(new Face(5, 3, 2));
+            octa.Faces.Add(new Face(5, 4, 3));
+            octa.Faces.Add(new Face(5, 1, 4));
 
-            for (int i = 0; i < 8; i++)
-            {
-                var faceVertices = octa.Vertices.Select((v, ind) => (v, ind))
-                                                .OrderBy(p => octaCenters[i].DistanceTo(in p.v))
-                                                .Select(p => p.ind)
-                                                .Take(3);
-
-                octa.Faces.Add(new Face(faceVertices.ToArray()));
-            }
-
+            octa.ApplyPlanarUV();
+            octa.ComputeVertexNormals();
             return octa;
         }
 
@@ -1559,7 +2019,8 @@ namespace Lab7_CG
             for (int i = 0; i < 5; i++)
             {
                 var angleRadians = angle * (Math.PI / 180);
-                verticesBottom.Add((new Vertex((float)Math.Cos(angleRadians), -0.5f, (float)Math.Sin(angleRadians)), number));
+                verticesBottom.Add((new Vertex((float)Math.Cos(angleRadians), -0.5f, (float)Math.Sin(angleRadians),
+                    (float)(0.5 + Math.Cos(angleRadians) * 0.5), (float)(0.5 + Math.Sin(angleRadians) * 0.5)), number));
                 angle += 72;
                 number += 2;
             }
@@ -1570,7 +2031,8 @@ namespace Lab7_CG
             for (int i = 0; i < 5; i++)
             {
                 var angleRadians = angle * (Math.PI / 180);
-                verticesTop.Add((new Vertex((float)Math.Cos(angleRadians), 0.5f, (float)Math.Sin(angleRadians)), number));
+                verticesTop.Add((new Vertex((float)Math.Cos(angleRadians), 0.5f, (float)Math.Sin(angleRadians),
+                    (float)(0.5 + Math.Cos(angleRadians) * 0.5), (float)(0.5 + Math.Sin(angleRadians) * 0.5)), number));
                 angle += 72;
                 number += 2;
             }
@@ -1585,8 +2047,9 @@ namespace Lab7_CG
             icosa.Faces.Add(new Face(8, 9, 0));
             icosa.Faces.Add(new Face(9, 0, 1));
 
-            icosa.Vertices.Add(new Vertex(0, -(float)Math.Sqrt(5) / 2, 0));
-            icosa.Vertices.Add(new Vertex(0, (float)Math.Sqrt(5) / 2, 0));
+            // Добавляем вершины с UV-координатами
+            icosa.Vertices.Add(new Vertex(0, -(float)Math.Sqrt(5) / 2, 0, 0.5f, 0.0f));
+            icosa.Vertices.Add(new Vertex(0, (float)Math.Sqrt(5) / 2, 0, 0.5f, 1.0f));
 
             number = 1;
 
@@ -1608,6 +2071,7 @@ namespace Lab7_CG
 
             icosa.Faces.Add(new Face(11, 9, 1));
 
+            icosa.ComputeVertexNormals();
             return icosa;
         }
 
@@ -1645,6 +2109,8 @@ namespace Lab7_CG
                                  ));
             }
 
+            dodeca.ApplyPlanarUV();
+            dodeca.ComputeVertexNormals();
             return dodeca;
         }
 
@@ -1672,47 +2138,36 @@ namespace Lab7_CG
         {
             var newPoly = this.Clone();
 
-            Matrix<float> reflectionMatrix;
-
-            switch (plane.ToUpper())
-            {
-                case "XY":
-                    reflectionMatrix = new float[4, 4]
-                    {
-                        { 1,  0,  0,  0 },
-                        { 0,  1,  0,  0 },
-                        { 0,  0, -1,  0 },
-                        { 0,  0,  0,  1 }
-                    };
-                    break;
-
-                case "YZ":
-                    reflectionMatrix = new float[4, 4]
-                    {
-                        { -1,  0,  0,  0 },
-                        { 0,  1,  0,  0 },
-                        { 0,  0,  1,  0 },
-                        { 0,  0,  0,  1 }
-                    };
-                    break;
-
-                case "XZ":
-                    reflectionMatrix = new float[4, 4]
-                    {
-                        { 1,  0,  0,  0 },
-                        { 0, -1,  0,  0 },
-                        { 0,  0,  1,  0 },
-                        { 0,  0,  0,  1 }
-                    };
-                    break;
-
-                default:
-                    throw new ArgumentException("Invalid plane");
-            }
-
             for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                newPoly.Vertices[i] *= reflectionMatrix;
+                var vertex = newPoly.Vertices[i];
+                float newX = vertex.X;
+                float newY = vertex.Y;
+                float newZ = vertex.Z;
+
+                switch (plane.ToUpper())
+                {
+                    case "XY":
+                        newZ = -vertex.Z;
+                        break;
+                    case "YZ":
+                        newX = -vertex.X;
+                        break;
+                    case "XZ":
+                        newY = -vertex.Y;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid plane");
+                }
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    newX,
+                    newY,
+                    newZ,
+                    vertex.U,
+                    vertex.V
+                );
             }
 
             return newPoly;
@@ -1721,35 +2176,30 @@ namespace Lab7_CG
         public PolyHedron ScaledAroundCenter(float scaleX, float scaleY, float scaleZ)
         {
             var newPoly = this.Clone();
+
+            // Находим центр
             double centerX = 0, centerY = 0, centerZ = 0;
             FindCenter(newPoly.Vertices, ref centerX, ref centerY, ref centerZ);
-            Matrix<float> moveToOriginMatrix = new float[4, 4]
-            {
-                { 1, 0, 0, 0 },
-                { 0, 1, 0, 0 },
-                { 0, 0, 1, 0 },
-                { (float)-centerX, (float)-centerY, (float)-centerZ, 1 }
-            };
+
             for (int i = 0; i < newPoly.Vertices.Count; i++)
-                newPoly.Vertices[i] *= moveToOriginMatrix;
-            Matrix<float> scalingMatrix = new float[4, 4]
             {
-                { scaleX, 0, 0, 0 },
-                { 0, scaleY, 0, 0 },
-                { 0, 0, scaleZ, 0 },
-                { 0, 0, 0, 1 }
-            };
-            for (int i = 0; i < newPoly.Vertices.Count; i++)
-                newPoly.Vertices[i] *= scalingMatrix;
-            Matrix<float> moveBackMatrix = new float[4, 4]
-            {
-                { 1, 0, 0, 0 },
-                { 0, 1, 0, 0 },
-                { 0, 0, 1, 0 },
-                { (float)centerX, (float)centerY, (float)centerZ, 1 }
-            };
-            for (int i = 0; i < newPoly.Vertices.Count; i++)
-                newPoly.Vertices[i] *= moveBackMatrix;
+                var vertex = newPoly.Vertices[i];
+
+                // Перемещаем к центру, масштабируем, возвращаем обратно
+                float x = (vertex.X - (float)centerX) * scaleX + (float)centerX;
+                float y = (vertex.Y - (float)centerY) * scaleY + (float)centerY;
+                float z = (vertex.Z - (float)centerZ) * scaleZ + (float)centerZ;
+
+                // Явно сохраняем UV-координаты
+                newPoly.Vertices[i] = new Vertex(
+                    x,
+                    y,
+                    z,
+                    vertex.U,
+                    vertex.V
+                );
+            }
+
             return newPoly;
         }
 
@@ -1826,7 +2276,10 @@ namespace Lab7_CG
                             break;
                     }
 
-                    vertices.Add(new Vertex(xr, yr, zr));
+                    // Добавляем UV-координаты на основе угла и позиции в профиле
+                    float u = (float)k / segments;
+                    float v = (float)Array.IndexOf(profile.ToArray(), p) / (profile.Count - 1);
+                    vertices.Add(new Vertex(xr, yr, zr, u, v));
                 }
             }
 
@@ -1846,7 +2299,9 @@ namespace Lab7_CG
                 }
             }
 
-            return new PolyHedron(faces, vertices);
+            var ph = new PolyHedron(faces, vertices);
+            ph.ComputeVertexNormals();
+            return ph;
         }
 
         public static PolyHedron LoadFromObj(string path)
@@ -1890,7 +2345,10 @@ namespace Lab7_CG
                 }
             }
 
-            return new PolyHedron(faces, vertices);
+            var ph = new PolyHedron(faces, vertices);
+            ph.ApplyPlanarUV();
+            ph.ComputeVertexNormals();
+            return ph;
         }
 
         public void SaveAsObj(string path)
@@ -1929,7 +2387,10 @@ namespace Lab7_CG
                 {
                     double y = yMin + j * dy;
                     double z = EvaluateFunction(funcIndex, x, y);
-                    vertices.Add(new Vertex((float)x, (float)z, (float)y));
+                    // Добавляем UV-координаты на основе позиции в сетке
+                    float u = (float)i / nx;
+                    float v = (float)j / ny;
+                    vertices.Add(new Vertex((float)x, (float)z, (float)y, u, v));
                 }
             }
 
@@ -1945,7 +2406,9 @@ namespace Lab7_CG
                 }
             }
 
-            return new PolyHedron(faces, vertices);
+            var ph = new PolyHedron(faces, vertices);
+            ph.ComputeVertexNormals();
+            return ph;
         }
 
         private static double EvaluateFunction(int funcIndex, double x, double y)
@@ -1962,450 +2425,121 @@ namespace Lab7_CG
                     return 0;
             }
         }
-    public void CalculateVertexNormals()
-    {
-        // Инициализируем список нормалей вершин если нужно
-        if (VertexNormals == null)
-            VertexNormals = new List<Vertex>();
 
-        VertexNormals.Clear();
-
-        // Инициализируем нулевые нормали для всех вершин
-        for (int i = 0; i < Vertices.Count; i++)
+        public void ApplyPlanarUV()
         {
-            VertexNormals.Add(new Vertex(0, 0, 0));
-        }
+            if (Vertices == null || Vertices.Count == 0 || Faces == null)
+                return;
 
-        // Для каждой грани добавляем ее нормаль к нормалям ее вершин
-        foreach (var face in Faces)
-        {
-            Vertex faceNormal = GetFaceNormal(face, Vertices);
+            var newVertices = new List<Vertex>();
+            var newFaces = new List<Face>();
 
-            foreach (int vertexIndex in face.Vertices)
+            // Определяем размер сетки для равномерного распределения граней
+            int gridSize = (int)Math.Ceiling(Math.Sqrt(Faces.Count));
+            float cellSize = 1.0f / gridSize;
+
+            for (int faceIndex = 0; faceIndex < Faces.Count; faceIndex++)
             {
-                Vertex currentNormal = VertexNormals[vertexIndex];
-                VertexNormals[vertexIndex] = new Vertex(
-                    currentNormal.X + faceNormal.X,
-                    currentNormal.Y + faceNormal.Y,
-                    currentNormal.Z + faceNormal.Z
-                );
-            }
-        }
+                var face = Faces[faceIndex];
+                if (face.Vertices.Length < 3) continue;
 
-        // Нормализуем все нормали вершин
-        for (int i = 0; i < VertexNormals.Count; i++)
-        {
-            VertexNormals[i] = VertexNormals[i].Normalize();
-        }
-    }
+                // Позиция этой грани в сетке текстуры
+                int gridX = faceIndex % gridSize;
+                int gridY = faceIndex / gridSize;
 
-    // Модель освещения Ламберта
-    public Color CalculateLambertColor(Vertex position, Vertex normal, Vertex lightPos, Color objColor, Color lightColor, float ambient, float diffuse)
-    {
-        Vertex lightDir = (lightPos - position).Normalize();
-        float dot = Math.Max(0, Vertex.Dot(normal, lightDir));
+                float uStart = gridX * cellSize;
+                float vStart = gridY * cellSize;
+                float uEnd = uStart + cellSize;
+                float vEnd = vStart + cellSize;
 
-        float r = objColor.R * (ambient + diffuse * dot) * (lightColor.R / 255f);
-        float g = objColor.G * (ambient + diffuse * dot) * (lightColor.G / 255f);
-        float b = objColor.B * (ambient + diffuse * dot) * (lightColor.B / 255f);
+                // Получаем вершины грани и находим bounding box
+                var faceVertices = face.Vertices.Select(idx => Vertices[idx]).ToList();
 
-        r = Math.Min(255, Math.Max(0, r));
-        g = Math.Min(255, Math.Max(0, g));
-        b = Math.Min(255, Math.Max(0, b));
+                float minX = faceVertices.Min(v => v.X);
+                float maxX = faceVertices.Max(v => v.X);
+                float minY = faceVertices.Min(v => v.Y);
+                float maxY = faceVertices.Max(v => v.Y);
+                float minZ = faceVertices.Min(v => v.Z);
+                float maxZ = faceVertices.Max(v => v.Z);
 
-        return Color.FromArgb((int)r, (int)g, (int)b);
-    }
+                // Выбираем плоскость проекции на основе нормали грани
+                var normal = GetFaceNormal(face);
+                string projectionPlane = GetBestProjectionPlane(normal);
 
-    // Модель освещения Фонга
-    public Color CalculatePhongColor(Vertex position, Vertex normal, Vertex lightPos, Vertex viewPos, Color objColor, Color lightColor,
-        float ambient, float diffuse, float specular, float shininess)
-    {
-        Vertex lightDir = (lightPos - position).Normalize();
-        Vertex viewDir = (viewPos - position).Normalize();
-        Vertex reflectDir = (-lightDir - 2 * Vertex.Dot(-lightDir, normal) * normal).Normalize();
+                // Создаем новые вершины для этой грани
+                var newFaceIndices = new List<int>();
 
-        float lambert = Math.Max(0, Vertex.Dot(normal, lightDir));
-        float spec = (float)Math.Pow(Math.Max(0, Vertex.Dot(viewDir, reflectDir)), shininess);
-
-        float r = objColor.R * (ambient + diffuse * lambert + specular * spec) * (lightColor.R / 255f);
-        float g = objColor.G * (ambient + diffuse * lambert + specular * spec) * (lightColor.G / 255f);
-        float b = objColor.B * (ambient + diffuse * lambert + specular * spec) * (lightColor.B / 255f);
-
-        r = Math.Min(255, Math.Max(0, r));
-        g = Math.Min(255, Math.Max(0, g));
-        b = Math.Min(255, Math.Max(0, b));
-
-        return Color.FromArgb((int)r, (int)g, (int)b);
-    }
-
-    // Создание текстуры шахматной доски
-    public Color GetCheckerboardTexture(float u, float v, int size, Color color1, Color color2)
-    {
-        int tileX = (int)(u * size) % 2;
-        int tileY = (int)(v * size) % 2;
-
-        return (tileX == tileY) ? color1 : color2;
-    }
-
-        // Получение цвета из текстуры изображения
-        public Color GetImageTexture(float u, float v, Bitmap texture)
-        {
-            if (texture == null) return Color.Gray;
-
-            // Добавляем поддержку повторения текстуры
-            u = u % 1.0f;
-            v = v % 1.0f;
-            if (u < 0) u += 1.0f;
-            if (v < 0) v += 1.0f;
-
-            int x = (int)(u * (texture.Width - 1));
-            int y = (int)((1 - v) * (texture.Height - 1)); // Инвертируем v для правильной ориентации
-
-            x = Math.Max(0, Math.Min(texture.Width - 1, x));
-            y = Math.Max(0, Math.Min(texture.Height - 1, y));
-
-            return texture.GetPixel(x, y);
-        }
-        private bool IsPointInFace(int x, int y, List<Vertex> faceVertices)
-        {
-            int numVertices = faceVertices.Count;
-            if (numVertices < 3) return false;
-
-            bool inside = false;
-
-            // Используем алгоритм трассировки лучей
-            for (int i = 0, j = numVertices - 1; i < numVertices; j = i++)
-            {
-                Vertex vi = faceVertices[i];
-                Vertex vj = faceVertices[j];
-
-                if (((vi.Y > y) != (vj.Y > y)) &&
-                    (x < (vj.X - vi.X) * (y - vi.Y) / (vj.Y - vi.Y) + vi.X))
+                foreach (int oldIndex in face.Vertices)
                 {
-                    inside = !inside;
-                }
-            }
+                    var vertex = Vertices[oldIndex];
+                    float u, v;
 
-            return inside;
-        }
-
-
-
-        // Основной метод рендеринга с освещением и текстурированием
-        public void RenderWithLightingAndTextures(Graphics g, PictureBox pictureBox, Camera camera, Form1.Projection proj,
-    Form1.ShadingMode shading, Form1.TextureMode texture, Vertex lightPos, Color objColor, Color lightColor,
-    float ambient, float diffuse, float specular, float shininess, Bitmap textureImage, int textureSize)
-        {
-            // Создаем Z-буфер
-            float[,] zBuffer = new float[pictureBox.Width, pictureBox.Height];
-            for (int x = 0; x < pictureBox.Width; x++)
-                for (int y = 0; y < pictureBox.Height; y++)
-                    zBuffer[x, y] = float.MaxValue;
-
-            // Вычисляем нормали вершин если нужно
-            if ((shading == Form1.ShadingMode.Gouraud || shading == Form1.ShadingMode.Phong) && VertexNormals == null)
-            {
-                CalculateVertexNormals();
-            }
-
-            // Фильтруем видимые грани
-            var visiblePolyhedron = FilterVisibleFaces(camera, proj);
-
-            // Сортируем грани по глубине
-            var sortedFaces = visiblePolyhedron.Faces
-                .OrderBy(face =>
-                {
-                    var center = GetFaceCenter(face);
-                    return center.DistanceTo(camera.Position);
-                })
-                .ToList();
-
-            // Рисуем грани с учетом выбранного режима шейдинга и текстурирования
-            foreach (var face in sortedFaces)
-            {
-                var points = new List<PointF>();
-                var vertices3D = new List<Vertex>();
-                var vertexColors = new List<Color>();
-                var textureCoords = new List<Vertex>();
-
-                // Подготавливаем данные для вершин
-                foreach (var vertexIndex in face.Vertices)
-                {
-                    Vertex v = visiblePolyhedron.Vertices[vertexIndex];
-                    vertices3D.Add(v);
-
-                    // Вычисляем цвет вершины в зависимости от режима шейдинга
-                    Color vertexColor = objColor;
-                    if (shading == Form1.ShadingMode.Gouraud && VertexNormals != null && VertexNormals.Count > vertexIndex)
+                    // Проецируем вершину на выбранную плоскость
+                    switch (projectionPlane)
                     {
-                        vertexColor = CalculateLambertColor(v, VertexNormals[vertexIndex], lightPos, objColor, lightColor, ambient, diffuse);
+                        case "XY":
+                            u = (vertex.X - minX) / (maxX - minX + 0.0001f);
+                            v = (vertex.Y - minY) / (maxY - minY + 0.0001f);
+                            break;
+                        case "XZ":
+                            u = (vertex.X - minX) / (maxX - minX + 0.0001f);
+                            v = (vertex.Z - minZ) / (maxZ - minZ + 0.0001f);
+                            break;
+                        case "YZ":
+                        default:
+                            u = (vertex.Y - minY) / (maxY - minY + 0.0001f);
+                            v = (vertex.Z - minZ) / (maxZ - minZ + 0.0001f);
+                            break;
                     }
-                    vertexColors.Add(vertexColor);
 
-                    // Генерируем координаты текстуры
-                    float u = (v.X - Vertices.Min(vert => vert.X)) / (Vertices.Max(vert => vert.X) - Vertices.Min(vert => vert.X));
-                    float vCoord = (v.Y - Vertices.Min(vert => vert.Y)) / (Vertices.Max(vert => vert.Y) - Vertices.Min(vert => vert.Y));
-                    textureCoords.Add(new Vertex(u, vCoord, 0));
+                    // Масштабируем до размера ячейки и инвертируем V-координату (если нужно)
+                    u = uStart + u * cellSize;
+                    v = vStart + (1 - v) * cellSize; // Инвертируем V для правильной ориентации
 
-                    PointF projectedPoint = v.GetProjection(
-                        proj == Form1.Projection.Perspective ? 0 : 1,
-                        pictureBox.Width / 2,
-                        pictureBox.Height / 2,
-                        120, 120);
-                    points.Add(projectedPoint);
+                    newVertices.Add(new Vertex(vertex.X, vertex.Y, vertex.Z, u, v));
+                    newFaceIndices.Add(newVertices.Count - 1);
                 }
 
-                if (points.Count > 2)
-                {
-                    // Рисуем грань с учетом выбранного режима
-                    if (shading == Form1.ShadingMode.Flat || shading == Form1.ShadingMode.None)
-                    {
-                        // Flat shading или без шейдинга
-                        Color faceColor = objColor;
-                        Vertex faceCenter = GetFaceCenter(face);
-                        Vertex faceNormal = GetFaceNormal(face, Vertices).Normalize();
-
-                        if (shading == Form1.ShadingMode.Flat)
-                        {
-                            faceColor = CalculateLambertColor(faceCenter, faceNormal, lightPos, objColor, lightColor, ambient, diffuse);
-                        }
-
-                        // Применяем текстурирование если нужно
-                        if (texture != Form1.TextureMode.None)
-                        {
-                            Color textureColor = faceColor;
-
-                            // Для текстурирования изображением с освещением используем специальный метод
-                            if (texture == Form1.TextureMode.Image && textureImage != null)
-                            {
-                                ApplyImageTextureWithLighting(face, textureImage, g, camera, lightPos,
-                                    objColor, lightColor, ambient, diffuse, specular, shininess, shading);
-                                continue; // Пропускаем обычную отрисовку
-                            }
-                            else
-                            {
-                                // Для других типов текстур
-                                float u = (faceCenter.X - Vertices.Min(vert => vert.X)) / (Vertices.Max(vert => vert.X) - Vertices.Min(vert => vert.X));
-                                float vCoord = (faceCenter.Y - Vertices.Min(vert => vert.Y)) / (Vertices.Max(vert => vert.Y) - Vertices.Min(vert => vert.Y));
-
-                                switch (texture)
-                                {
-                                    case Form1.TextureMode.SolidColor:
-                                        textureColor = objColor;
-                                        break;
-                                    case Form1.TextureMode.Checkerboard:
-                                        textureColor = GetCheckerboardTexture(u, vCoord, textureSize, objColor, Color.White);
-                                        break;
-                                }
-
-                                // Комбинируем текстуру с освещением
-                                if (shading == Form1.ShadingMode.Flat)
-                                {
-                                    Color lightingColor = CalculateLambertColor(faceCenter, faceNormal, lightPos, Color.White, lightColor, ambient, diffuse);
-                                    textureColor = CombineColorAndLighting(textureColor, lightingColor);
-                                }
-                            }
-                            faceColor = textureColor;
-                        }
-
-                        using (Brush brush = new SolidBrush(faceColor))
-                        using (Pen pen = new Pen(Color.Black, 1))
-                        {
-                            g.FillPolygon(brush, points.ToArray());
-                            g.DrawPolygon(pen, points.ToArray());
-                        }
-                    }
-                    else if (shading == Form1.ShadingMode.Gouraud)
-                    {
-                        // Gouraud shading с интерполяцией цветов
-                        if (texture == Form1.TextureMode.Image && textureImage != null)
-                        {
-                            ApplyImageTextureWithLighting(face, textureImage, g, camera, lightPos,
-                                objColor, lightColor, ambient, diffuse, specular, shininess, shading);
-                        }
-                        else
-                        {
-                            // Для простоты используем средний цвет
-                            Color avgColor = Color.FromArgb(
-                                vertexColors.Sum(c => c.R) / vertexColors.Count,
-                                vertexColors.Sum(c => c.G) / vertexColors.Count,
-                                vertexColors.Sum(c => c.B) / vertexColors.Count
-                            );
-
-                            using (Brush brush = new SolidBrush(avgColor))
-                            using (Pen pen = new Pen(Color.Black, 1))
-                            {
-                                g.FillPolygon(brush, points.ToArray());
-                                g.DrawPolygon(pen, points.ToArray());
-                            }
-                        }
-                    }
-                    else if (shading == Form1.ShadingMode.Phong)
-                    {
-                        // Phong shading с интерполяцией нормалей
-                        if (texture == Form1.TextureMode.Image && textureImage != null)
-                        {
-                            ApplyImageTextureWithLighting(face, textureImage, g, camera, lightPos,
-                                objColor, lightColor, ambient, diffuse, specular, shininess, shading);
-                        }
-                        else
-                        {
-                            // Для простоты используем среднюю нормаль
-                            Vertex avgNormal = new Vertex(
-                                VertexNormals.Where((n, i) => face.Vertices.Contains(i)).Average(n => n.X),
-                                VertexNormals.Where((n, i) => face.Vertices.Contains(i)).Average(n => n.Y),
-                                VertexNormals.Where((n, i) => face.Vertices.Contains(i)).Average(n => n.Z)
-                            ).Normalize();
-
-                            Vertex faceCenter = GetFaceCenter(face);
-                            Color phongColor = CalculatePhongColor(faceCenter, avgNormal, lightPos, camera.Position,
-                                objColor, lightColor, ambient, diffuse, specular, shininess);
-
-                            using (Brush brush = new SolidBrush(phongColor))
-                            using (Pen pen = new Pen(Color.Black, 1))
-                            {
-                                g.FillPolygon(brush, points.ToArray());
-                                g.DrawPolygon(pen, points.ToArray());
-                            }
-                        }
-                    }
-                }
+                newFaces.Add(new Face(newFaceIndices.ToArray()));
             }
+
+            Vertices = newVertices;
+            Faces = newFaces;
         }
 
-        private void ApplyImageTextureWithLighting(Face face, Bitmap texture, Graphics graphics, Camera camera,
-    Vertex lightPos, Color objColor, Color lightColor, float ambient, float diffuse, float specular,
-    float shininess, Form1.ShadingMode shading)
+        public Vertex GetFaceNormal(Face face)
         {
-            if (texture == null) return;
+            if (face.Vertices.Length < 3)
+                return new Vertex(0, 0, 0);
 
-            // Получаем вершины грани
-            List<Vertex> faceVertices = face.Vertices.Select(i => Vertices[i]).ToList();
-            List<Vertex> vertexNormals = face.Vertices.Select(i => VertexNormals[i]).ToList();
+            var v1 = Vertices[face.Vertices[0]];
+            var v2 = Vertices[face.Vertices[1]];
+            var v3 = Vertices[face.Vertices[2]];
 
-            // Получаем bounding box грани
-            float minX = faceVertices.Min(v => v.X);
-            float maxX = faceVertices.Max(v => v.X);
-            float minY = faceVertices.Min(v => v.Y);
-            float maxY = faceVertices.Max(v => v.Y);
+            var edge1 = v2 - v1;
+            var edge2 = v3 - v1;
 
-            // Проходим по всем пикселям в bounding box
-            for (int x = (int)minX; x <= (int)maxX; x++)
-            {
-                for (int y = (int)minY; y <= (int)maxY; y++)
-                {
-                    // Проверяем, находится ли пиксель внутри грани
-                    if (IsPointInFace(x, y, faceVertices))
-                    {
-                        // Вычисляем текстурные координаты
-                        float u = (x - minX) / (maxX - minX);
-                        float v = (y - minY) / (maxY - minY);
-
-                        // Получаем цвет из текстуры
-                        Color texColor = GetImageTexture(u, v, texture);
-
-                        // Вычисляем позицию и нормаль для текущего пикселя
-                        Vertex pixelPos = InterpolateVertex(faceVertices, u, v);
-                        Vertex pixelNormal = InterpolateVertex(vertexNormals, u, v).Normalize();
-
-                        // Вычисляем цвет освещения
-                        Color lightingColor = Color.White;
-
-                        if (shading == Form1.ShadingMode.Flat)
-                        {
-                            Vertex faceCenter = GetFaceCenter(face);
-                            Vertex faceNormal = GetFaceNormal(face, Vertices).Normalize();
-                            lightingColor = CalculateLambertColor(faceCenter, faceNormal, lightPos, Color.White, lightColor, ambient, diffuse);
-                        }
-                        else if (shading == Form1.ShadingMode.Gouraud || shading == Form1.ShadingMode.Phong)
-                        {
-                            lightingColor = CalculateLambertColor(pixelPos, pixelNormal, lightPos, Color.White, lightColor, ambient, diffuse);
-
-                            if (shading == Form1.ShadingMode.Phong)
-                            {
-                                // Для Phong добавляем specular компонент
-                                Color specularColor = CalculatePhongColor(pixelPos, pixelNormal, lightPos, camera.Position,
-                                    Color.White, lightColor, 0, 0, specular, shininess);
-
-                                // Комбинируем diffuse и specular
-                                lightingColor = CombineColors(lightingColor, specularColor);
-                            }
-                        }
-
-                        // Комбинируем цвет текстуры с освещением
-                        Color finalColor = CombineColorAndLighting(texColor, lightingColor);
-
-                        // Рисуем пиксель
-                        using (Brush pixelBrush = new SolidBrush(finalColor))
-                        {
-                            graphics.FillRectangle(pixelBrush, x, y, 1, 1);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Метод для интерполяции вершин
-        private Vertex InterpolateVertex(List<Vertex> vertices, float u, float v)
-        {
-            // Простая билинейная интерполяция для треугольников/четырехугольников
-            if (vertices.Count == 3)
-            {
-                // Для треугольника используем барицентрические координаты
-                return vertices[0] * (1 - u - v) + vertices[1] * u + vertices[2] * v;
-            }
-            else if (vertices.Count == 4)
-            {
-                // Для четырехугольника - билинейная интерполяция
-                Vertex top = vertices[0] * (1 - u) + vertices[1] * u;
-                Vertex bottom = vertices[3] * (1 - u) + vertices[2] * u;
-                return top * (1 - v) + bottom * v;
-            }
-
-            return vertices[0]; // fallback
-        }
-
-        // Метод для комбинирования цвета текстуры и освещения
-        private Color CombineColorAndLighting(Color textureColor, Color lightingColor)
-        {
-            float r = (textureColor.R / 255f) * (lightingColor.R / 255f);
-            float g = (textureColor.G / 255f) * (lightingColor.G / 255f);
-            float b = (textureColor.B / 255f) * (lightingColor.B / 255f);
-
-            return Color.FromArgb(
-                (int)(r * 255),
-                (int)(g * 255),
-                (int)(b * 255)
+            var normal = new Vertex(
+                edge1.Y * edge2.Z - edge1.Z * edge2.Y,
+                edge1.Z * edge2.X - edge1.X * edge2.Z,
+                edge1.X * edge2.Y - edge1.Y * edge2.X
             );
+
+            return normal.Normalize();
         }
 
-        // Метод для комбинирования двух цветов (для specular)
-        private Color CombineColors(Color color1, Color color2)
+        private string GetBestProjectionPlane(Vertex normal)
         {
-            return Color.FromArgb(
-                Math.Min(255, color1.R + color2.R),
-                Math.Min(255, color1.G + color2.G),
-                Math.Min(255, color1.B + color2.B)
-            );
+            float absX = Math.Abs(normal.X);
+            float absY = Math.Abs(normal.Y);
+            float absZ = Math.Abs(normal.Z);
+
+            if (absX >= absY && absX >= absZ)
+                return "YZ";
+            else if (absY >= absX && absY >= absZ)
+                return "XZ";
+            else
+                return "XY";
         }
-
-        // Добавляем свойство для нормалей вершин
-        public List<Vertex> VertexNormals { get; set; }
-
-        public static Vertex GetFaceNormal(Face face, List<Vertex> vertices)
-{
-    var v1 = vertices[face.Vertices[0]];
-    var v2 = vertices[face.Vertices[1]];
-    var v3 = vertices[face.Vertices[2]];
-
-    var ab = new Vertex(v2.X - v1.X, v2.Y - v1.Y, v2.Z - v1.Z);
-    var bc = new Vertex(v3.X - v2.X, v3.Y - v2.Y, v3.Z - v2.Z);
-
-    var nx = ab.Y * bc.Z - ab.Z * bc.Y;
-    var ny = ab.Z * bc.X - ab.X * bc.Z;
-    var nz = ab.X * bc.Y - ab.Y * bc.X;
-
-    return new Vertex(nx, ny, nz);
-}
     }
 }

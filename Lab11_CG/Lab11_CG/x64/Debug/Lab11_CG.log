@@ -1,0 +1,56 @@
+﻿  main.cpp
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00CF", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E5", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00F0", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E4", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E0", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00EC", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00F6", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E2", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00F2", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00F4", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E3", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00ED", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00FB", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00E9", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(64,1): warning C4566: символ, представленный универсальным именем символа "\u00F8", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00C7", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00E0", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00EA", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00F0", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00F8", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00E8", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00E2", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00E5", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00EC", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00EF", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00F1", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00EB", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00FC", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00F6", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00F2", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00EE", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00E7", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00ED", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(73,1): warning C4566: символ, представленный универсальным именем символа "\u00FB", невозможно представить в текущей кодовой странице (1251)
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(180,19): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(181,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(181,20): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(182,20): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(183,19): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(184,19): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(185,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(185,19): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(191,19): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(192,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(192,21): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(193,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(193,21): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(194,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(194,22): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(195,14): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(195,22): warning C4305: инициализация: усечение из "double" в "GLfloat"
+C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\main.cpp(286,21): warning C4834: удаление возвращаемого значения функции с атрибутом [[nodiscard]]
+  Lab11_CG.vcxproj -> C:\Users\Амалия\Documents\GitHub\Lab_2_CG\Lab11_CG\x64\Debug\Lab11_CG.exe
+  "pwsh.exe" не является внутренней или внешней
+  командой, исполняемой программой или пакетным файлом.
